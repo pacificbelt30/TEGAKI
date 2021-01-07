@@ -12,6 +12,23 @@ from PyQt5.QtWidgets import *
 # import sip
 
 
+# レポート原稿用のテキストエリア
+class ReportArea(QTextEdit):
+    def __init__(self, parent=None):
+        super(ReportArea, self).__init__(parent)
+        self.row = 20
+        self.column = 30
+        self.font_size = 15
+        font = QFont()
+        font.setPointSize(self.font_size)
+        font_met = QFontMetrics(font)
+        self.setFont(font)
+        self.setLineWrapMode(3)  # 文字数での折返し
+        self.setLineWrapColumnOrWidth(self.row)
+        self.setFixedHeight(font_met.height()*self.column)
+        self.setViewportMargins(font_met.width('x')*3, 0, 0, 0)
+
+
 class MainWindow(QWidget):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
@@ -23,17 +40,18 @@ class MainWindow(QWidget):
         # self.test = QCheckBox('test', self)
         self.btn = QPushButton("BUTTON", self)
         self.btn.clicked.connect(self.print_praintext)
-        self.textbox = QTextEdit()
-        font = QFont()
-        font.setPointSize(self.font_size)
-        font_met = QFontMetrics(font)
-        self.textbox.setFont(font)
+        self.textbox = ReportArea()
+        # self.textbox = QTextEdit()
+        # font = QFont()
+        # font.setPointSize(self.font_size)
+        # font_met = QFontMetrics(font)
+        # self.textbox.setFont(font)
         # self.textbox = QPlainTextEdit()
         # self.textbox.setLineWrapMode(QTextEdit.FixedColumnWidth)
-        self.textbox.setLineWrapMode(3)  # 文字数での折返し
-        self.textbox.setLineWrapColumnOrWidth(self.row_limit_words)
-        self.textbox.setFixedHeight(font_met.height()*30)
-        self.textbox.setViewportMargins(font_met.width('x')*3, 0, 0, 0)
+        # self.textbox.setLineWrapMode(3)  # 文字数での折返し
+        # self.textbox.setLineWrapColumnOrWidth(self.row_limit_words)
+        # self.textbox.setFixedHeight(font_met.height()*30)
+        # self.textbox.setViewportMargins(font_met.width('x')*3, 0, 0, 0)
         # self.textbox.setFontPointSize(15.0)
         # self.textbox.setFontUnderline(True)
         # self.textbox.setMaximumBlockCount(10)
@@ -75,7 +93,7 @@ class MainWindow(QWidget):
         return count
 
 
-class repoWindow(QWidget):
+class RepoWindow(QWidget):
     def __init__(self, text, parent=None):
         super(MainWindow, self).__init__(parent)
         self.report_area = QTextEdit()
