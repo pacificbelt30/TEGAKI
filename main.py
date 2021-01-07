@@ -23,9 +23,11 @@ class ReportArea(QTextEdit):
         font.setPointSize(self.font_size)
         font_met = QFontMetrics(font)
         self.setFont(font)
-        self.setLineWrapMode(3)  # 文字数での折返し
-        self.setLineWrapColumnOrWidth(self.row)
-        self.setFixedHeight(font_met.height()*self.column)
+        self.setLineWrapMode(QTextEdit.FixedColumnWidth)  # 文字数での折返し 3
+        self.setWordWrapMode(QTextOption.WrapAnywhere)
+        # self.setLineWrapMode(3)  # 文字数での折返し 3
+        self.setLineWrapColumnOrWidth(self.column)
+        self.setFixedHeight(font_met.height()*self.row)
         self.setViewportMargins(font_met.width('x')*3, 0, 0, 0)
 
 
@@ -39,7 +41,7 @@ class MainWindow(QWidget):
 
         # self.test = QCheckBox('test', self)
         self.btn = QPushButton("BUTTON", self)
-        self.btn.clicked.connect(self.print_praintext)
+        self.btn.clicked.connect(self.print_plaintext)
         self.textbox = ReportArea()
         layout = QVBoxLayout(self)
         layout.addWidget(self.btn)
@@ -78,7 +80,7 @@ class MainWindow(QWidget):
 
 class RepoWindow(QWidget):
     def __init__(self, text, parent=None):
-        super(MainWindow, self).__init__(parent)
+        super(RepoWindow, self).__init__(parent)
         # self.report_area = QTextEdit()
         self.report_area = ReportArea()
         self.a4word = 30
