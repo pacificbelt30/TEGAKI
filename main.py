@@ -11,6 +11,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 # import sip
 
+
 class MainWindow(QWidget):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
@@ -72,6 +73,7 @@ class MainWindow(QWidget):
             count.append(len(s))
         self.line_word_count = count
         return count
+
 
 class repoWindow(QWidget):
     def __init__(self, text, parent=None):
