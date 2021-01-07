@@ -41,33 +41,16 @@ class MainWindow(QWidget):
         self.btn = QPushButton("BUTTON", self)
         self.btn.clicked.connect(self.print_praintext)
         self.textbox = ReportArea()
-        # self.textbox = QTextEdit()
-        # font = QFont()
-        # font.setPointSize(self.font_size)
-        # font_met = QFontMetrics(font)
-        # self.textbox.setFont(font)
-        # self.textbox = QPlainTextEdit()
-        # self.textbox.setLineWrapMode(QTextEdit.FixedColumnWidth)
-        # self.textbox.setLineWrapMode(3)  # 文字数での折返し
-        # self.textbox.setLineWrapColumnOrWidth(self.row_limit_words)
-        # self.textbox.setFixedHeight(font_met.height()*30)
-        # self.textbox.setViewportMargins(font_met.width('x')*3, 0, 0, 0)
-        # self.textbox.setFontPointSize(15.0)
-        # self.textbox.setFontUnderline(True)
-        # self.textbox.setMaximumBlockCount(10)
-        # self.addWidget(self.textbox)
         layout = QVBoxLayout(self)
         layout.addWidget(self.btn)
         layout.addWidget(self.textbox)
         self.setGeometry(300, 50, 650, 550)
         self.setWindowTitle('QCheckBox')
 
-    def print_praintext(self):
+    def print_plaintext(self):
         print(self.textbox.toPlainText())
         s = self.textbox.toPlainText()
         print(s.split('\n'))
-        # print(self.textbox.blockCount())
-        # self.sliceMojisu(self.textbox.toPlainText().split('\n'))
         print(self.get_line_count())
         print(self.get_line_word_count())
 
@@ -96,7 +79,8 @@ class MainWindow(QWidget):
 class RepoWindow(QWidget):
     def __init__(self, text, parent=None):
         super(MainWindow, self).__init__(parent)
-        self.report_area = QTextEdit()
+        # self.report_area = QTextEdit()
+        self.report_area = ReportArea()
         self.a4word = 30
         self.a4row = 20
         self.text = text
@@ -104,6 +88,7 @@ class RepoWindow(QWidget):
 
     def cut_a4size(self):
         self.report_area
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
