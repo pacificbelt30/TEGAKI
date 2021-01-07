@@ -11,7 +11,6 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 # import sip
 
-
 class MainWindow(QWidget):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
