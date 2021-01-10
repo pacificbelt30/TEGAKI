@@ -166,7 +166,8 @@ class MainWindow(QWidget):
         print('三画目'+str(len(self.canvas.countx[2]))+' '+str(len(self.canvas.county[2])))
         tmp = {self.text:{"data":{"x":self.canvas.countx,"y":self.canvas.county}}}
         json.dumps(tmp)
-        with open('test.json', 'w') as f:
+        with open('test.json', 'a') as f:
+        #with open('test.json', 'w') as f:
             json.dump(tmp, f, indent=4)
         self.canvas.clear()
         plt.show()
