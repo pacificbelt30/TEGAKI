@@ -90,7 +90,7 @@ class Canvas(QWidget):
     # クリックした位置からマウスを離した位置まで線を引いていくよ
     painter.drawLine(self.lastPos, endPos)
     # アップデートしてあげようね
-    self.update()
+    self.update()#このとき，paintEventが呼ばれると考えられる．
     self.countx[self.count].append(self.lastPos.x())
     self.county[self.count].append(self.lastPos.y())
     #print(self.countx+self.county+endPos)
