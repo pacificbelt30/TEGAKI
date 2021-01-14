@@ -9,13 +9,13 @@
 <g fill="none" stroke="black" stroke-width="1" fill-rule="evenodd" stroke-linecap="square" stroke-linejoin="bevel" >
 
 <g fill="#ffffff" fill-opacity="1" stroke="none" transform="matrix(1,0,0,1,0,0)"
-font-family="Cantarell" font-size="10" font-weight="400" font-style="normal" 
+font-family="MS UI Gothic" font-size="9" font-weight="400" font-style="normal" 
 >
 <rect x="0" y="0" width="200" height="200"/>
 </g>
 
 <g fill="none" stroke="#000000" stroke-opacity="1" stroke-width="1" stroke-linecap="square" stroke-linejoin="bevel" transform="matrix(1,0,0,1,0,0)"
-font-family="Cantarell" font-size="10" font-weight="400" font-style="normal" 
+font-family="MS UI Gothic" font-size="9" font-weight="400" font-style="normal" 
 >
 <polyline fill="none" vector-effect="none" points="22,53 23,53 " />
 <polyline fill="none" vector-effect="none" points="23,53 26,53 " />

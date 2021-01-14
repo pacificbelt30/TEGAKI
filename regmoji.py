@@ -7,7 +7,8 @@ import matplotlib.pyplot as plt
 
 
 class Canvas(QWidget):
-    moji_fin = Signal()
+    moji_fin = Signal() # 文字を書き終わったときに放出
+    oneline_fin = Signal() # 1画描き終わったときに放出
 
     def __init__(self):
         super().__init__()
@@ -26,31 +27,37 @@ class Canvas(QWidget):
         self.setGeometry(self.canvas_width, self.canvas_height, self.canvas_width, self.canvas_height)
         self.setFixedSize(self.canvas_width, self.canvas_height)
 
+    # 描く文字の画数をセット
     def setKakusu(self, kakusu):
         self.kakusu = kakusu
         if self.kakusu < 1:
             self.kakusu = 99
 
+    # 左クリックを押したとき，
     def mousePressEvent(self, event):
         self.is_press = True
         self.lastpos = event.pos()
         self.xlist.append(list())
         self.ylist.append(list())
 
+    # 左クリックを離したとき，
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton and self.is_press:
             self.is_press = False
             self.drawLine(event.pos())
             self.count = self.count + 1
+            self.oneline_fin.emit()
 
             if self.count == self.kakusu:
                 self.moji_fin.emit()
-                self.clear()
+                # self.clear()
 
+    # マウスを動かしたとき，
     def mouseMoveEvent(self, event):
         if event.buttons() == Qt.LeftButton and self.is_press:
             self.drawLine(event.pos())
 
+    # 線を引きます
     def drawLine(self, endpos):
         painter = QPainter(self.image)
         painter.setPen(QPen(Qt.black, 2, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
@@ -61,6 +68,7 @@ class Canvas(QWidget):
         # print(self.xlist)
         self.update()
 
+    # x,y座標，画数，描画エリアすべてリセット
     def clear(self):
         self.xlist = list()
         self.ylist = list()
@@ -100,6 +108,7 @@ class MainWindow(QWidget):
         self.text = ["あ", "い", "う", "え", "お"]
         self.kakusu = [3, 2, 2, 2, 3]
         self.count = 0
+        self.font_scale = QFont()
         self.initUI()
 
     def initUI(self):
@@ -109,48 +118,83 @@ class MainWindow(QWidget):
         self.setWindowLayout()
 
     def setWindowLayout(self):
-        self.label = QLabel()
-        self.label.setText(self.text[self.count]+"を書いてください"+str(self.kakusu[self.count])+"画")
+        self.order_label = QLabel()
+        self.kakusu_label = QLabel()
         self.canvas = Canvas()
-        self.canvas.setKakusu(self.kakusu[self.count])
-        self.canvas.moji_fin.connect(self.save_data)
-        self.button = QPushButton()
+        self.nextbtn = QPushButton()
+        self.cancelbtn = QPushButton()
         self.layout = QVBoxLayout()
-        self.layout.addWidget(self.label)
+        self.btnlayout = QHBoxLayout()
+        self.order_label.setText(self.text[self.count]+"を書いてください"+str(self.kakusu[self.count])+"画")
+        self.kakusu_label.setText("現在 "+str(self.canvas.count)+"/"+str(self.kakusu[self.count]))
+        self.canvas.setKakusu(self.kakusu[self.count])
+        self.canvas.moji_fin.connect(self.dis_paint)
+        self.canvas.oneline_fin.connect(self.update_label)
+        self.nextbtn.clicked.connect(self.next_moji)
+        self.cancelbtn.clicked.connect(self.cancel_moji)
+        self.canvas.setStyleSheet("background-color:#444444")
+        self.cancelbtn.setText("取り消し")
+        self.nextbtn.setText("次へ")
+        self.btnlayout.addWidget(self.cancelbtn)
+        self.btnlayout.addWidget(self.nextbtn)
+        self.layout.addWidget(self.order_label)
+        self.layout.addWidget(self.kakusu_label)
         self.layout.addWidget(self.canvas)
-        self.layout.addWidget(self.button)
+        self.layout.addLayout(self.btnlayout)
         self.setLayout(self.layout)
+        self.font_scale.setPixelSize(20)
+        self.setFont(self.font_scale)
 
     @Slot()
+    def update_label(self):
+        self.order_label.setText(self.text[self.count]+"を書いてください"+str(self.kakusu[self.count])+"画")
+        self.kakusu_label.setText("現在 "+str(self.canvas.count)+"/"+str(self.kakusu[self.count]))
+
+    @Slot()
+    def dis_paint(self):
+        self.canvas.setEnabled(False)
+        # self.canvas.clear()
+        # self.field_update()
+
+    def field_update(self):
+        if self.count + 1 < len(self.text):
+            self.count = self.count + 1
+        self.order_label.setText(self.text[self.count]+"を書いてください"+str(self.kakusu[self.count])+"画")
+        self.kakusu_label.setText("現在 " + str(self.canvas.count) + "/" + str(self.kakusu[self.count]))
+        self.canvas.setKakusu(self.kakusu[self.count])
+        self.update()
+
+    # 文字を取り消し，
+    @Slot()
+    def cancel_moji(self):
+        self.canvas.clear()
+        self.order_label.setText(self.text[self.count] + "を書いてください" + str(self.kakusu[self.count]) + "画")
+        self.kakusu_label.setText("現在 " + str(self.canvas.count) + "/" + str(self.kakusu[self.count]))
+        self.update()
+        self.canvas.setEnabled(True)
+
+    # 次の文字へ
+    @Slot()
+    def next_moji(self):
+        self.save_data()
+        self.canvas.clear()
+        self.field_update()
+        self.canvas.setEnabled(True)
+
+    # 文字の点列データをjson形式で保存
     def save_data(self):
-        print('count==3')
+        print('count==' + str(self.canvas.count))
         plt.xlim(0, self.canvas.canvas_width)
         plt.ylim(self.canvas.canvas_height, 0)
         for i in range(len(self.canvas.xlist)):
             plt.plot(self.canvas.xlist[i], self.canvas.ylist[i])
-            print(str(i)+'画目'+str(len(self.canvas.xlist[i]))+' '+str(len(self.canvas.ylist[i])))
-        # plt.plot(self.canvas.xlist[0], self.canvas.ylist[0])
-        # plt.plot(self.canvas.xlist[1], self.canvas.ylist[1])
-        # plt.plot(self.canvas.xlist[2], self.canvas.ylist[2])
-        # print('一画目'+str(len(self.canvas.xlist[0]))+' '+str(len(self.canvas.ylist[0])))
-        # print('二画目'+str(len(self.canvas.xlist[1]))+' '+str(len(self.canvas.ylist[1])))
-        # print('三画目'+str(len(self.canvas.xlist[2]))+' '+str(len(self.canvas.ylist[2])))
+            print(str(i + 1) + '画目' + str(len(self.canvas.xlist[i])) + ' ' + str(len(self.canvas.ylist[i])))
         tmp = {self.text[self.count]: {"data": {"x": self.canvas.xlist, "y": self.canvas.ylist}}}
         json.dumps(tmp)
         with open('test.json', 'a') as f:
-        #with open('test.json', 'w') as f:
+            # with open('test.json', 'w') as f:
             json.dump(tmp, f, indent=4)
         plt.show()
-        self.canvas.clear()
-        self.field_update()
-
-    def field_update(self):
-        self.count = self.count + 1
-        if self.count < len(self.text):
-            self.label.setText(self.text[self.count]+"を書いてください"+str(self.kakusu[self.count])+"画")
-            self.canvas.setKakusu(self.kakusu[self.count])
-            self.update()
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
