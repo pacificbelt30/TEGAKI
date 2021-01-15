@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "text": "あ",
+    "kakusu": 3
+  },
+  {
+    "id": 2,
+    "text": "い",
+    "kakusu": 2
+  },
+  {
+    "id": 3,
+    "text": "う",
+    "kakusu": 2
+  },
+  {
+    "id": 4,
+    "text": "え",
+    "kakusu": 2
+  },
+  {
+    "id": 5,
+    "text": "お",
+    "kakusu": 3
+  }
+]

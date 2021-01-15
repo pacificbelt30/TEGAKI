@@ -23,6 +23,7 @@ class Canvas(QWidget):
 
   def initUI(self):
     self.setGeometry(300, 300, 300, 300)
+    self.setFixedSize(300,300)
     #self.setWindowTitle("Canvas")
     #self.show()
 
