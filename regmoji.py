@@ -18,6 +18,7 @@ class Canvas(QWidget):
         #self.painter = QPainter(self.image)#drawLineのたび呼び出すと効率悪いかもしれないので
         #self.painter.setPen(QPen(Qt.black,2, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
         self.setGeometry(300, 300, 300, 300)
+        self.setFixedSize(300, 300)
 
     def mousePressEvent(self, event):
         self.is_press = True
