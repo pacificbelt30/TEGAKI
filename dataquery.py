@@ -2,7 +2,14 @@ import json
 class dataQuery:
     def __init__(self,filename):
         print('initialize dataQuery')
-        self.data = self.get_json(filename)
+        self._data = self.get_json(filename)
+    
+    @property
+    def data(self) -> dict:
+        return self._data
+    @data.setter
+    def data(self,data) -> dict:
+        self._data = data
 
     def get_json(self,filename):
         try:

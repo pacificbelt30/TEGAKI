@@ -7,29 +7,79 @@ import matplotlib.pyplot as plt
 
 
 class Canvas(QWidget):
-    moji_fin = Signal() # 文字を書き終わったときに放出
-    oneline_fin = Signal() # 1画描き終わったときに放出
+    moji_fin:Signal = Signal() # 文字を書き終わったときに放出
+    oneline_fin:Signal = Signal() # 1画描き終わったときに放出
 
     def __init__(self):
         super().__init__()
-        self.canvas_width = 600
-        self.canvas_height = 600
-        self.xlist = list()
-        self.ylist = list()
-        self.kakusu = 99
-        self.count = 0  # 画数カウント
-        self.image = QImage()
-        self.lastpos = QPoint()
-        self.is_press = False
-        self.paintable = True
+        self._canvas_width:int = 600
+        self._canvas_height:int = 600
+        self._xlist:list = list()
+        self._ylist:list = list()
+        self._kakusu:int = 99
+        self._count:int = 0  # 画数カウント
+        self._image:QImage = QImage()
+        self._lastpos:QPoint = QPoint()
+        self._is_press:bool = False
+        #self._paintable:bool = True
         # self.painter = QPainter(self.image)#drawLineのたび呼び出すと効率悪いかもしれないので
         # self.painter.setPen(QPen(Qt.black,2, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
         self.setGeometry(self.canvas_width, self.canvas_height, self.canvas_width, self.canvas_height)
         self.setFixedSize(self.canvas_width, self.canvas_height)
 
+    # property, setter define
+    @property
+    def canvas_width(self) ->int:
+        return self._canvas_width
+    @property
+    def canvas_height(self) ->int:
+        return self._canvas_height
+    @property
+    def xlist(self) -> list:
+        return self._xlist
+    @xlist.setter
+    def xlist(self,x:list):
+        self._xlist = x
+    @property
+    def ylist(self) -> list:
+        return self._ylist
+    @ylist.setter
+    def ylist(self,y:list):
+        self._ylist = y
+    @property
+    def kakusu(self) -> int:
+        return self._kakusu
+    @kakusu.setter
+    def kakusu(self,kakusu:int):
+        self._kakusu = kakusu
+    @property
+    def count(self) -> int:
+        return self._count
+    @count.setter
+    def count(self,count:int):
+        self._count = count
+    @property
+    def image(self) -> QImage:
+        return self._image
+    @image.setter
+    def image(self,image:QImage):
+        self._image = image
+    @property
+    def lastpos(self) -> QPoint:
+        return self._lastpos
+    @lastpos.setter
+    def lastpos(self,lastpos:QPoint):
+        self._lastpos = lastpos
+    @property
+    def is_press(self) -> bool:
+        return self._is_press
+    @is_press.setter
+    def is_press(self,press:bool):
+        self._is_press = press
+
     # 描く文字の画数をセット
-    def setKakusu(self, kakusu):
-        self.kakusu = kakusu
+    def setKakusu(self, num):
+        self.kakusu = num
         if self.kakusu < 1:
             self.kakusu = 99
 
@@ -128,6 +178,7 @@ class MainWindow(QWidget):
         self.order_label.setText(self.text[self.count]+"を書いてください"+str(self.kakusu[self.count])+"画")
         self.kakusu_label.setText("現在 "+str(self.canvas.count)+"/"+str(self.kakusu[self.count]))
         self.canvas.setKakusu(self.kakusu[self.count])
+        #self.canvas.kakusu = (self.kakusu[self.count])
         self.canvas.moji_fin.connect(self.dis_paint)
         self.canvas.oneline_fin.connect(self.update_label)
         self.nextbtn.clicked.connect(self.next_moji)
@@ -162,6 +213,7 @@ class MainWindow(QWidget):
         self.order_label.setText(self.text[self.count]+"を書いてください"+str(self.kakusu[self.count])+"画")
         self.kakusu_label.setText("現在 " + str(self.canvas.count) + "/" + str(self.kakusu[self.count]))
         self.canvas.setKakusu(self.kakusu[self.count])
+        #self.canvas.kakusu = (self.kakusu[self.count])
         self.update()
 
     # 文字を取り消し，
