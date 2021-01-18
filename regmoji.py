@@ -241,12 +241,26 @@ class MainWindow(QWidget):
         for i in range(len(self.canvas.xlist)):
             plt.plot(self.canvas.xlist[i], self.canvas.ylist[i])
             print(str(i + 1) + '画目' + str(len(self.canvas.xlist[i])) + ' ' + str(len(self.canvas.ylist[i])))
-        tmp = {self.text[self.count]: {"data": {"x": self.canvas.xlist, "y": self.canvas.ylist}}}
+        tmp = {self.text[self.count]: {"data": {"x": self.canvas.xlist, "y": self.canvas.ylist, "min_x":self.minlist(self.canvas.xlist),"min_y":self.minlist(self.canvas.ylist), "max_x":self.maxlist(self.canvas.xlist), "max_y":self.maxlist(self.canvas.ylist)}}}
         json.dumps(tmp)
-        with open('test.json', 'a') as f:
-            # with open('test.json', 'w') as f:
+        with open('data/test.json', 'a') as f:
+            # with open('data/test.json', 'w') as f:
             json.dump(tmp, f, indent=4)
         plt.show()
+
+    def minlist(self,x:list) -> list:
+        ans = list()
+        for i in x:
+            ans.append(min(i))
+
+        return ans
+
+    def maxlist(self,x:list) -> list:
+        ans = list()
+        for i in x:
+            ans.append(max(i))
+
+        return ans
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

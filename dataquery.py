@@ -1,5 +1,6 @@
 import json
 #from icecream import ic
+# データベースとして使いたい予定
 class dataQuery:
     def __init__(self,filename):
         print('initialize dataQuery')
@@ -18,7 +19,7 @@ class dataQuery:
                 self.data = json.load(f)
         except FileNotFoundError:
             print(filename+' is not found.')
-            return ''
+            return dict()
         return self.data
 
     def get_mojidata(self,moji):
@@ -27,7 +28,7 @@ class dataQuery:
             return self.data[moji]
         except KeyError:
             print('key:',moji,' is not found.')
-            return ''
+            return dict()
 
 class database:
     # "i":{"id":,"yomi":,"kakusu":,"len":,"datanum":,"data":}
@@ -41,7 +42,8 @@ class database:
         self._data = data
 
     def create(self,yomi:str,kakusu:int,length:int):
-        self.data[yomi] = {'id':len(self.data)+1,'yomi':yomi,'kakusu':kakusu,'len':length,'datanum':0,'data':list()}
+        if yomi not in self.data:
+            self.data[yomi] = {'id':len(self.data)+1,'yomi':yomi,'kakusu':kakusu,'len':length,'datanum':0,'data':list()}
 
     def addData(self,key:str,x:list,y:list):
         if key not in self.data:
@@ -51,7 +53,8 @@ class database:
         if self.data[key]['kakusu'] != len(x) or self.data[key]['kakusu'] != len(y):
             print("画数が…")
             return ''
-        self.data[key]['data'].append({'x':x,'y':y})
+        #self.data[key]['data'].append({'x':x,'y':y,'min_x'})
+        self.data[key]['data'].append({"data": {"x": x, "y": y, "min_x":self.minlist(x),"min_y":self.minlist(y), "max_x":self.maxlist(x), "max_y":self.maxlist(y)}})
         self.data[key]['datanum'] = self.data[key]['datanum'] + 1
 
     def delete(self,key:str):
@@ -89,19 +92,40 @@ class database:
             return ''
         return self.data
 
+    def minlist(self,x:list) -> list:
+        ans = list()
+        for i in x:
+            ans.append(min(i))
+
+        return ans
+
+    def maxlist(self,x:list) -> list:
+        ans = list()
+        for i in x:
+            ans.append(max(i))
+
+        return ans
+
+    def save_to_json(self):
+        with open('data/database.json', 'w') as f:
+            # with open('test.json', 'w') as f:
+            json.dump(self.data, f, indent=2)
+ 
+
+
 
 
 
 # t軸0~2piに正規化
 # x,y軸0 ~ 1に正規化
 
-a = dataQuery("template.json")
+a = dataQuery("data/template.json")
 #print(a.get_json('template.json'))
 print(a.get_mojidata('あ'))
 print(a.get_mojidata('い')['data'])
 b = database()
 #b = database("template.json")
-b.get_json("template.json")
+b.get_json("data/database.json")
 print('い' in b.data)
 x = [[1,2,3,4,5,6,7],[2,3,4]]
 y = [[2,3,4,5,6,7],[2,3,4]]
@@ -110,8 +134,10 @@ print(len(y))
 b.addData('い',x,y)
 b.create('う',2,5)
 b.addData('う',x,y)
-print(b.data)
-b.delete('い')
-b.delete('u')
-print(b.data)
+#print(b.data)
+#b.delete('い')
+#b.delete('u')
+#print(b.data)
 b.normalize('あ')
+b.addData('う',x,y)
+b.save_to_json()
