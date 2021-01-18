@@ -1,4 +1,5 @@
 import json
+#from icecream import ic
 class dataQuery:
     def __init__(self,filename):
         print('initialize dataQuery')
@@ -31,12 +32,12 @@ class dataQuery:
 class database:
     # "i":{"id":,"yomi":,"kakusu":,"len":,"datanum":,"data":}
     def __init__(self):
-        self._data = ''
+        self._data = dict()
     @property
     def data(self) -> dict:
         return self._data
     @data.setter
-    def data(self,data) -> dict:
+    def data(self,data:dict):
         self._data = data
 
     def create(self,yomi:str,kakusu:int,length:int):
@@ -59,15 +60,48 @@ class database:
         except KeyError:
             print("削除失敗")
 
+    def normalize(self,key:str):
+        tmp = self.data[key]['data']
+        tmp2 = dict()
+        tmp2['normdata'] = list()
+        for i in range(len(tmp)):
+            tmp2['normdata'].append({'x':list(),'y':list()})
+            for j in range(self.data[key]['kakusu']):
+                tmp2['normdata'][i]['x'].append(list())
+                tmp2['normdata'][i]['y'].append(list())
+                maxx = max(tmp[i]['x'][j])
+                maxy = max(tmp[i]['y'][j])
+                minx = min(tmp[i]['x'][j])
+                miny = min(tmp[i]['y'][j])
+                for k in tmp[i]['x'][j]:
+                    tmp2['normdata'][i]['x'][j].append((k-minx)/(maxx-minx))
+                for k in tmp[i]['y'][j]:
+                    tmp2['normdata'][i]['y'][j].append((k-miny)/(maxy-miny))
+        self.data[key]['normdata'] = tmp2['normdata']
+        print(self.data)
+
+    def get_json(self,filename:str) -> dict:
+        try:
+            with open(filename) as f:
+                self.data = json.load(f)
+        except FileNotFoundError:
+            print(filename+' is not found.')
+            return ''
+        return self.data
 
 
+
+
+# t軸0~2piに正規化
+# x,y軸0 ~ 1に正規化
 
 a = dataQuery("template.json")
 #print(a.get_json('template.json'))
 print(a.get_mojidata('あ'))
 print(a.get_mojidata('い')['data'])
 b = database()
-b.data = a.data
+#b = database("template.json")
+b.get_json("template.json")
 print('い' in b.data)
 x = [[1,2,3,4,5,6,7],[2,3,4]]
 y = [[2,3,4,5,6,7],[2,3,4]]
@@ -80,3 +114,4 @@ print(b.data)
 b.delete('い')
 b.delete('u')
 print(b.data)
+b.normalize('あ')
