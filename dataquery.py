@@ -45,17 +45,18 @@ class database:
         if yomi not in self.data:
             self.data[yomi] = {'id':len(self.data)+1,'yomi':yomi,'kakusu':kakusu,'len':length,'datanum':0,'data':list()}
 
-    def addData(self,key:str,x:list,y:list):
+    def addData(self,key:str,x:list,y:list) -> bool:
         if key not in self.data:
             #self.create()
             print("不正鍵")
-            return ''
+            return False
         if self.data[key]['kakusu'] != len(x) or self.data[key]['kakusu'] != len(y):
             print("画数が…")
-            return ''
+            return False
         #self.data[key]['data'].append({'x':x,'y':y,'min_x'})
         self.data[key]['data'].append({"data": {"x": x, "y": y, "min_x":self.minlist(x),"min_y":self.minlist(y), "max_x":self.maxlist(x), "max_y":self.maxlist(y)}})
         self.data[key]['datanum'] = self.data[key]['datanum'] + 1
+        return True
 
     def delete(self,key:str):
         try:
@@ -96,14 +97,12 @@ class database:
         ans = list()
         for i in x:
             ans.append(min(i))
-
         return ans
 
     def maxlist(self,x:list) -> list:
         ans = list()
         for i in x:
             ans.append(max(i))
-
         return ans
 
     def save_to_json(self):
@@ -119,25 +118,4 @@ class database:
 # t軸0~2piに正規化
 # x,y軸0 ~ 1に正規化
 
-a = dataQuery("data/template.json")
-#print(a.get_json('template.json'))
-print(a.get_mojidata('あ'))
-print(a.get_mojidata('い')['data'])
-b = database()
-#b = database("template.json")
-b.get_json("data/database.json")
-print('い' in b.data)
-x = [[1,2,3,4,5,6,7],[2,3,4]]
-y = [[2,3,4,5,6,7],[2,3,4]]
-print(len(x))
-print(len(y))
-b.addData('い',x,y)
-b.create('う',2,5)
-b.addData('う',x,y)
-#print(b.data)
-#b.delete('い')
-#b.delete('u')
-#print(b.data)
-b.normalize('あ')
-b.addData('う',x,y)
-b.save_to_json()
+

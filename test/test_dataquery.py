@@ -1,0 +1,25 @@
+import sys
+sys.path.append('../')
+from ..dataquery import *
+a = dataQuery("data/template.json")
+#print(a.get_json('template.json'))
+print(a.get_mojidata('あ'))
+print(a.get_mojidata('い')['data'])
+b = database()
+#b = database("template.json")
+b.get_json("data/database.json")
+print('い' in b.data)
+x = [[1,2,3,4,5,6,7],[2,3,4]]
+y = [[2,3,4,5,6,7],[2,3,4]]
+print(len(x))
+print(len(y))
+b.addData('い',x,y)
+b.create('う',2,5)
+b.addData('う',x,y)
+#print(b.data)
+#b.delete('い')
+#b.delete('u')
+#print(b.data)
+b.normalize('あ')
+b.addData('う',x,y)
+b.save_to_json()
