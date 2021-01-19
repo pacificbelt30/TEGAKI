@@ -6,6 +6,7 @@
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
 import sys
+import os
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -35,16 +36,17 @@ class ReportArea(QTextEdit):
 
     # DEBUG用
     def print_plaintext(self):
-        print(self.textbox.toPlainText())
-        s = self.textbox.toPlainText()
+        print(self.toPlainText())
+        s = self.toPlainText()
         print(s.split('\n'))
         print(self.get_line_count())
         print(self.get_line_word_count())
+        print(self.textCursor().position())
 
     # 全体の行数を取得 self.columnを上回り折り返された部分は新たな行としてカウントする
     def get_line_count(self):
         # count = 0
-        text = self.textbox.toPlainText().split('\n')
+        text = self.toPlainText().split('\n')
         count = len(text)
         print(len(text))
         for s in text:
@@ -59,7 +61,7 @@ class ReportArea(QTextEdit):
     # 各行の文字数
     def get_line_word_count(self):
         count = []
-        for s in self.textbox.toPlainText().split('\n'):
+        for s in self.toPlainText().split('\n'):
             count.append(len(s))
         self.line_word_count = count
         return count
@@ -68,7 +70,7 @@ class ReportArea(QTextEdit):
     def limit_word_count(self):
         count = 0
         mojisu = 0
-        text = self.textbox.toPlainText().split('\n')
+        text = self.toPlainText().split('\n')
         # count = len(text)
         print(len(text))
         for s in text:
@@ -99,9 +101,10 @@ class MainWindow(QWidget):
         self.line_word_count = [0]
 
         # self.test = QCheckBox('test', self)
-        self.btn = QPushButton("BUTTON", self)
-        self.btn.clicked.connect(self.print_plaintext)
         self.textbox = ReportArea()
+        self.btn = QPushButton("BUTTON", self)
+        self.btn.clicked.connect(self.textbox.print_plaintext)
+
         layout = QVBoxLayout(self)
         layout.addWidget(self.btn)
         layout.addWidget(self.textbox)
@@ -154,6 +157,17 @@ class RepoWindow(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    try:
+        styleFile = os.path.join(
+            os.path.dirname(__file__),
+            'style.qss'
+        )
+        with open(styleFile, 'r') as f:
+            style = f.read()
+    except:
+        style = ''
+    app.setStyleSheet(style)
+    print(style)
     main_window = MainWindow()
     main_window.show()
     sys.exit(app.exec_())
