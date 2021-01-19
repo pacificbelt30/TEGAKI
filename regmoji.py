@@ -156,7 +156,8 @@ class MainWindow(QWidget):
         self.title = "文字登録"
         self.width = 800
         self.height = 800
-        self.input = InputData("data/input.json")
+        #self.input = InputData("data/input.json")
+        self.input = InputData("data/num.json")
         #self.text = ["あ", "い", "う", "え", "お"]
         #self.kakusu = [3, 2, 2, 2, 3]
         self.text = self.input.get_all_keydata('text')
@@ -176,12 +177,15 @@ class MainWindow(QWidget):
     def setWindowLayout(self):
         self.order_label = QLabel()
         self.kakusu_label = QLabel()
+        self.nokori_label = QLabel()
         self.canvas = Canvas()
         self.nextbtn = QPushButton()
         self.cancelbtn = QPushButton()
+        self.skipbtn = QPushButton()
         self.layout = QVBoxLayout()
         self.btnlayout = QHBoxLayout()
-        self.order_label.setText(self.text[self.count]+"を書いてください"+str(self.kakusu[self.count])+"画")
+        self.nokori_label.setText("残り:"+str(len(self.text)-self.count-1)+"文字")
+        self.order_label.setText(self.text[self.count]+"を書いてください ["+str(self.kakusu[self.count])+"画]")
         #self.order_label.setText(self.input.data[self.count]['text']+"を書いてください"+str(self.input.data[self.count]['kakusu'])+"画")
         self.kakusu_label.setText("現在 "+str(self.canvas.count)+"/"+str(self.kakusu[self.count]))
         self.canvas.setKakusu(self.kakusu[self.count])
@@ -190,12 +194,16 @@ class MainWindow(QWidget):
         #self.canvas.oneline_fin.connect(self.update_label)
         self.canvas.oneline_fin.connect(self.label_update)
         self.nextbtn.clicked.connect(self.next_moji)
+        self.skipbtn.clicked.connect(self.skip_moji)
         self.cancelbtn.clicked.connect(self.cancel_moji)
         self.canvas.setStyleSheet("background-color:#444444")
         self.cancelbtn.setText("取り消し")
         self.nextbtn.setText("次へ")
+        self.skipbtn.setText("スキップ")
         self.btnlayout.addWidget(self.cancelbtn)
+        self.btnlayout.addWidget(self.skipbtn)
         self.btnlayout.addWidget(self.nextbtn)
+        self.layout.addWidget(self.nokori_label)
         self.layout.addWidget(self.order_label)
         self.layout.addWidget(self.kakusu_label)
         self.layout.addWidget(self.canvas)
@@ -222,27 +230,34 @@ class MainWindow(QWidget):
             self.label_update()
             self.canvas.setKakusu(self.kakusu[self.count])
         except IndexError:
-            self.order_label.setText(" "+"を書いてください"+str(0)+"画")
-            #self.order_label.setText(self.input.data[self.count]['text']+"を書いてください"+str(self.input.data[self.count]['kakusu'])+"画")
-            self.kakusu_label.setText("現在 " + str(0) + "/" + str(0))
             self.canvas.setKakusu(0)
+            self.canvas.setEnabled(False)
         #self.canvas.kakusu = (self.kakusu[self.count])
         self.update()
 
     # 一画書き終わるごと
     @Slot()
     def label_update(self):
-        self.order_label.setText(self.text[self.count]+"を書いてください"+str(self.kakusu[self.count])+"画")
-        #self.order_label.setText(self.input.data[self.count]['text']+"を書いてください"+str(self.input.data[self.count]['kakusu'])+"画")
-        self.kakusu_label.setText("現在 " + str(self.canvas.count) + "/" + str(self.kakusu[self.count]))
+        try:
+            self.nokori_label.setText("残り:"+str(len(self.text)-self.count-1)+"文字")
+            self.order_label.setText(self.text[self.count]+"を書いてください ["+str(self.kakusu[self.count])+"画]")
+            #self.order_label.setText(self.input.data[self.count]['text']+"を書いてください"+str(self.input.data[self.count]['kakusu'])+"画")
+            self.kakusu_label.setText("現在 " + str(self.canvas.count) + "/" + str(self.kakusu[self.count]))
+        except IndexError:
+            self.order_label.setText(" "+"を書いてください"+str(0)+"画")
+            #self.order_label.setText(self.input.data[self.count]['text']+"を書いてください"+str(self.input.data[self.count]['kakusu'])+"画")
+            self.kakusu_label.setText("現在 " + str(0) + "/" + str(0))
+            self.canvas.setEnabled(False)
 
+
+    # IndexError解消しろ
     # 文字を取り消し，
     @Slot()
     def cancel_moji(self) -> bool:
         self.canvas.clear()
+        self.canvas.setEnabled(True)
         self.label_update()
         self.update()
-        self.canvas.setEnabled(True)
         return True
 
     # 次の文字へ
@@ -253,8 +268,8 @@ class MainWindow(QWidget):
             return False
         self.save_data()
         self.canvas.clear()
-        self.field_update()
         self.canvas.setEnabled(True)
+        self.field_update()
         if self.count >= len(self.text):
             QMessageBox.information(None,'お疲れ様でした','すべての文字を書き終えました．',QMessageBox.Ok)
             self.canvas.setEnabled(False)
@@ -263,7 +278,14 @@ class MainWindow(QWidget):
         return True
 
     # めんどくさい場合のスキップボタン
+    @Slot()
     def skip_moji(self):
+        self.canvas.clear()
+        self.canvas.setEnabled(True)
+        self.field_update()
+        if self.count >= len(self.text):
+            QMessageBox.information(None,'お疲れ様でした','すべての文字を書き終えました．',QMessageBox.Ok)
+            self.canvas.setEnabled(False)
         return True
 
 
@@ -308,6 +330,12 @@ class MainWindow(QWidget):
             self.cancel_moji()
         elif event.key() == 83:
             self.skip_moji()
+
+# 平均化の進捗表示用窓
+class AverageWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+    
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
