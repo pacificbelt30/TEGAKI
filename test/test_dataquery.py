@@ -1,11 +1,12 @@
 import sys
 sys.path.append('../')
-from ..dataquery import *
-a = dataQuery("data/template.json")
+from dataquery import *
+a = InputData("../data/input.json")
 #print(a.get_json('template.json'))
-print(a.get_mojidata('あ'))
-print(a.get_mojidata('い')['data'])
-b = database()
+#print(a.get_mojidata('あ'))
+#print(a.get_mojidata('い')['data'])
+print(a.get_property(2,"text"))
+b = Database()
 #b = database("template.json")
 b.get_json("data/database.json")
 print('い' in b.data)

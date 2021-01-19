@@ -4,6 +4,7 @@ from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 from PySide2.QtCore import *
 import matplotlib.pyplot as plt
+from dataquery import *
 
 
 class Canvas(QWidget):
@@ -155,10 +156,15 @@ class MainWindow(QWidget):
         self.title = "文字登録"
         self.width = 800
         self.height = 800
-        self.text = ["あ", "い", "う", "え", "お"]
-        self.kakusu = [3, 2, 2, 2, 3]
+        self.input = InputData("data/input.json")
+        #self.text = ["あ", "い", "う", "え", "お"]
+        #self.kakusu = [3, 2, 2, 2, 3]
+        self.text = self.input.get_all_keydata('text')
+        self.kakusu = self.input.get_all_keydata('kakusu')
         self.count = 0
         self.font_scale = QFont()
+        self.db = Database()
+        self.db.get_json("data/output.json")
         self.initUI()
 
     def initUI(self):
@@ -176,11 +182,13 @@ class MainWindow(QWidget):
         self.layout = QVBoxLayout()
         self.btnlayout = QHBoxLayout()
         self.order_label.setText(self.text[self.count]+"を書いてください"+str(self.kakusu[self.count])+"画")
+        #self.order_label.setText(self.input.data[self.count]['text']+"を書いてください"+str(self.input.data[self.count]['kakusu'])+"画")
         self.kakusu_label.setText("現在 "+str(self.canvas.count)+"/"+str(self.kakusu[self.count]))
         self.canvas.setKakusu(self.kakusu[self.count])
         #self.canvas.kakusu = (self.kakusu[self.count])
         self.canvas.moji_fin.connect(self.dis_paint)
-        self.canvas.oneline_fin.connect(self.update_label)
+        #self.canvas.oneline_fin.connect(self.update_label)
+        self.canvas.oneline_fin.connect(self.label_update)
         self.nextbtn.clicked.connect(self.next_moji)
         self.cancelbtn.clicked.connect(self.cancel_moji)
         self.canvas.setStyleSheet("background-color:#444444")
@@ -196,11 +204,7 @@ class MainWindow(QWidget):
         self.font_scale.setPixelSize(20)
         self.setFont(self.font_scale)
 
-    @Slot()
-    def update_label(self):
-        self.order_label.setText(self.text[self.count]+"を書いてください"+str(self.kakusu[self.count])+"画")
-        self.kakusu_label.setText("現在 "+str(self.canvas.count)+"/"+str(self.kakusu[self.count]))
-
+    # 一文字全て書き終わったら
     @Slot()
     def dis_paint(self):
         self.canvas.setEnabled(False)
@@ -208,30 +212,60 @@ class MainWindow(QWidget):
         # self.field_update()
 
     def field_update(self):
-        if self.count + 1 < len(self.text):
-            self.count = self.count + 1
-        self.order_label.setText(self.text[self.count]+"を書いてください"+str(self.kakusu[self.count])+"画")
-        self.kakusu_label.setText("現在 " + str(self.canvas.count) + "/" + str(self.kakusu[self.count]))
-        self.canvas.setKakusu(self.kakusu[self.count])
+        #if self.count + 1 < len(self.text):
+        #if self.count + 1 < len(self.input.data):
+            #self.count = self.count + 1
+        self.count = self.count+1
+        if self.count  > len(self.input.data):
+            self.count = self.count - 1 
+        try:
+            self.label_update()
+            self.canvas.setKakusu(self.kakusu[self.count])
+        except IndexError:
+            self.order_label.setText(" "+"を書いてください"+str(0)+"画")
+            #self.order_label.setText(self.input.data[self.count]['text']+"を書いてください"+str(self.input.data[self.count]['kakusu'])+"画")
+            self.kakusu_label.setText("現在 " + str(0) + "/" + str(0))
+            self.canvas.setKakusu(0)
         #self.canvas.kakusu = (self.kakusu[self.count])
         self.update()
 
+    # 一画書き終わるごと
+    @Slot()
+    def label_update(self):
+        self.order_label.setText(self.text[self.count]+"を書いてください"+str(self.kakusu[self.count])+"画")
+        #self.order_label.setText(self.input.data[self.count]['text']+"を書いてください"+str(self.input.data[self.count]['kakusu'])+"画")
+        self.kakusu_label.setText("現在 " + str(self.canvas.count) + "/" + str(self.kakusu[self.count]))
+
     # 文字を取り消し，
     @Slot()
-    def cancel_moji(self):
+    def cancel_moji(self) -> bool:
         self.canvas.clear()
-        self.order_label.setText(self.text[self.count] + "を書いてください" + str(self.kakusu[self.count]) + "画")
-        self.kakusu_label.setText("現在 " + str(self.canvas.count) + "/" + str(self.kakusu[self.count]))
+        self.label_update()
         self.update()
         self.canvas.setEnabled(True)
+        return True
 
     # 次の文字へ
     @Slot()
-    def next_moji(self):
+    def next_moji(self) -> bool:
+        if self.kakusu[self.count] != self.canvas.count:
+            QMessageBox.information(None,'error','規定画数に達していません',QMessageBox.Ok)
+            return False
         self.save_data()
         self.canvas.clear()
         self.field_update()
         self.canvas.setEnabled(True)
+        if self.count >= len(self.text):
+            QMessageBox.information(None,'お疲れ様でした','すべての文字を書き終えました．',QMessageBox.Ok)
+            self.canvas.setEnabled(False)
+        print(self.count)
+        print(len(self.text))
+        return True
+
+    # めんどくさい場合のスキップボタン
+    def skip_moji(self):
+        return True
+
 
     # 文字の点列データをjson形式で保存
     def save_data(self):
@@ -243,9 +277,13 @@ class MainWindow(QWidget):
             print(str(i + 1) + '画目' + str(len(self.canvas.xlist[i])) + ' ' + str(len(self.canvas.ylist[i])))
         tmp = {self.text[self.count]: {"data": {"x": self.canvas.xlist, "y": self.canvas.ylist, "min_x":self.minlist(self.canvas.xlist),"min_y":self.minlist(self.canvas.ylist), "max_x":self.maxlist(self.canvas.xlist), "max_y":self.maxlist(self.canvas.ylist)}}}
         json.dumps(tmp)
-        with open('data/test.json', 'a') as f:
+        #with open('data/test.json', 'a') as f:
             # with open('data/test.json', 'w') as f:
-            json.dump(tmp, f, indent=4)
+            #json.dump(tmp, f, indent=4)
+        self.db.addData(self.text[self.count],self.canvas.xlist,self.canvas.ylist)
+        #self.db.addData(self.input.data[self.count]['text'],self.canvas.xlist,self.canvas.ylist)
+        #self.db.normalize(self.text[self.count])
+        self.db.save_to_json()
         plt.show()
 
     def minlist(self,x:list) -> list:
@@ -261,6 +299,15 @@ class MainWindow(QWidget):
             ans.append(max(i))
 
         return ans
+
+    def keyPressEvent(self, event):
+        #print(event.key())
+        if event.key() == Qt.Key_Return:
+            self.next_moji()
+        elif event.key() == 65:
+            self.cancel_moji()
+        elif event.key() == 83:
+            self.skip_moji()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
