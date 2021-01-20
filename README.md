@@ -1,8 +1,8 @@
 # TEGAKI
 手書き文字を生成し，ディジタル上で手書き文字レポートを作成する
 # TODO
-- jsonのデータでmin maxも保存する
-- setter getter使っていこう
+- jsonのデータでmin maxも保存する ○
+- setter getter使っていこう ○
 - regmoji.pyに書き直し ○
 - jsonを正しく出力
 - resize関係についてリサイズできないようにするか対応させるか
@@ -14,3 +14,4 @@
 - 出力形式をどうするか(svgでいいらしい)
 - A4 297mm, 210mm, (297000,210000)points
 - linuxでpythonエディタを用意する
+- validationをしておく

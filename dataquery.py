@@ -157,6 +157,9 @@ class Database:
             # with open('test.json', 'w') as f:
             json.dump(self.data, f, indent=2)
  
+    # データの検証 だめな場合は排除？
+    def validation(self):
+        return True
 
 
 
