@@ -15,3 +15,4 @@
 - A4 297mm, 210mm, (297000,210000)points
 - linuxでpythonエディタを用意する
 - validationをしておく
+- 誤差を加える(オリジナリティ)
