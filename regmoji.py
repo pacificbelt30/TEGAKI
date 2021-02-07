@@ -304,7 +304,7 @@ class MainWindow(QWidget):
             #json.dump(tmp, f, indent=4)
         self.db.addData(self.text[self.count],self.canvas.xlist,self.canvas.ylist)
         #self.db.addData(self.input.data[self.count]['text'],self.canvas.xlist,self.canvas.ylist)
-        #self.db.normalize(self.text[self.count])
+        self.db.normalize(self.text[self.count])
         self.db.save_to_json()
         plt.show()
 
