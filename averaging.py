@@ -37,7 +37,7 @@ class Averaging:
                 tmp.append(x[j][i])
             ans.append(min(tmp))
         return ans
-    def ave_max(self,x:list) -> list:
+    def ave_max(self,kakusu:int,x:list) -> list:
         tmp = list()
         ans = list()
         for i in range(kakusu):
