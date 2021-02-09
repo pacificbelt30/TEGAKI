@@ -38,7 +38,22 @@ class cosFourier:
 
         #print(ans)
         return ans
-        
+
+    # フーリエ級数
+    def fourier_M(self, y: list) -> list:
+        time: float = self.period / len(y)  # 1区間あたりの長さ
+        coea: int = self.an(y)  # an n=50まで
+        coeb: int = self.bn(y)  # an n=50まで
+        ans: list = [0] * len(y)  # フーリエ級数の各次数の係数 self.num個
+        for i in range(len(y)):
+            ans[i] = ans[i] + coea[0] / 2.0
+            for j in range(self.limit - 1):
+                # ans[i] = ans[i] + coea[j + 1] * math.cos((j + 1) / 2.0 * i * time)
+                # ans[i] = ans[i] + coea[j + 1] * math.cos((j + 1) / 2.0 * i * time) + coeb[j + 1] * math.sin((j + 1) / 2.0 * i * time)
+                ans[i] = ans[i] + coea[j + 1] * math.cos((j + 1) * i * 2 * math.pi / self.period) + coeb[j + 1] * math.sin((j + 1) * i * 2 * math.pi / self.period)
+
+        # print(ans)
+        return ans
 
     # 余弦フーリエのみなのでanのみを求めるだけで良い
     def an(self,y:list) -> list:
@@ -48,8 +63,24 @@ class cosFourier:
         time:float = self.period/length # 1区間あたりの長さ
         for n in range(self.limit):
             for i in range(length-1):
-                ans[n] = ans[n] + (y[i]+y[i+1])*time/2.0*math.cos(n/2.0*i*time)
-            ans[n] = ans[n]/math.pi # 係数割
+                # ans[n] = ans[n] + (y[i]+y[i+1])*time/2.0*math.cos(n/2.0*i*time)
+                # ans[n] = ans[n] + (y[i]* math.cos(n / 2.0 * i * time) + y[i + 1]* math.cos(n / 2.0 * (i+1) * time)) * time / 2.0
+                ans[n] = ans[n] + (y[i] * math.cos(2 * math.pi * n * i /self.period) + y[i + 1] * math.cos(2*math.pi*n*(i+1)/self.period)) * time / 2.0
+            ans[n] = ans[n]*coe # 係数割
+        #print("DEBUG ans")
+        #print(ans)
+        return ans
+
+    def bn(self,y:list) -> list:
+        coe:float = 2.0/self.period # bnの積分の係数
+        length:int = len(y) # 入力の長さ
+        ans:list = [0]*self.limit # bnの長さはself.limit
+        time:float = self.period/length # 1区間あたりの長さ
+        for n in range(self.limit):
+            for i in range(length-1):
+                # ans[n] = ans[n] + (y[i]*math.sin(n/2.0*i*time)+y[i+1]*math.sin(n/2.0*(i+1)*time))*time/2.0
+                ans[n] = ans[n] + (y[i] * math.sin(2 * math.pi * n * i / self.period) + y[i + 1] * math.sin(2 * math.pi * n * (i+1) / self.period)) * time / 2.0
+            ans[n] = ans[n]*coe # 係数割
         #print("DEBUG ans")
         #print(ans)
         return ans
@@ -60,7 +91,7 @@ class cosFourier:
 
     # DEBUG プロットする
     def plot(self,y:list):
-        time = self.period/self.num
+        time = self.period/len(y)
         print(time)
         tmp = list()
         plt.xlim(0, 2*self.period)
@@ -69,10 +100,11 @@ class cosFourier:
             tmp.append(i*self.period/len(y))
         plt.plot(tmp,y)
         
-        a = self.fourier(y)
+        # a = self.fourier(y)
+        a = self.fourier_M(y)
         print(a)
         tmp = list()
-        for i in range(self.num):
+        for i in range(len(y)):
             tmp.append(i*time)
             #print(str(i*time)+","+str(a[i]))
         plt.plot(tmp,a)

@@ -1,6 +1,8 @@
 from dataquery import *
 # 仕様
-# 
+#
+
+
 class Averaging:
     def __init__(self):
         self._min_ave = list()
@@ -21,8 +23,10 @@ class Averaging:
 
     def normalize(self): # 正規化
         return True
+
     def averaging(self): # 平均化
         return True
+
     def var_init(self): # 変数初期化
         self._min_ave = list()
         self._max_ave = list()
@@ -37,6 +41,7 @@ class Averaging:
                 tmp.append(x[j][i])
             ans.append(min(tmp))
         return ans
+
     def ave_max(self,kakusu:int,x:list) -> list:
         tmp = list()
         ans = list()

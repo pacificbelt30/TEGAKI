@@ -1,6 +1,9 @@
 import sys
 sys.path.append('../')
 from fourier import *
+
+length = 500
+
 for a in range(4-1):
     print(a)
 
@@ -10,9 +13,10 @@ x = [0,1,2,3,4,5,6,7,8,9,10]
 #y = [0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,3,3,3,3,2,2,2,2,1,1,1,1,0,0,0,0]
 y = list()
 
-for i in range(1000):
-    y.append(1*math.cos(i*2*math.pi/1000))
+for i in range(length):
+    y.append(9*math.cos(i*2*math.pi/length))
 a = cosFourier()
 a.an(y)
 a.fourier(y)
+a.fourier_M(y)
 a.plot(y)
