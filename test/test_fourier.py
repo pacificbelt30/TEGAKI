@@ -1,4 +1,5 @@
 import sys
+import random
 sys.path.append('../')
 from fourier import *
 
@@ -31,5 +32,11 @@ a.plot(y)
 y = list()
 for i in range(length):
     y.append(4*math.cos(i*2*math.pi/length))
+a.fourier_M(y)
+a.plot(y)
+
+y = list()
+for i in range(length):
+    y.append(4*math.cos(i*2*math.pi/length)+3-2*math.cos((i+1)*2*math.pi/length))
 a.fourier_M(y)
 a.plot(y)

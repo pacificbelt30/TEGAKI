@@ -185,7 +185,7 @@ class MainWindow(QWidget):
         self.layout = QVBoxLayout()
         self.btnlayout = QHBoxLayout()
         self.nokori_label.setText("残り:"+str(len(self.text)-self.count-1)+"文字")
-        self.order_label.setText(self.text[self.count]+"を書いてください ["+str(self.kakusu[self.count])+"画]")
+        self.order_label.setText("<font size='7'>「"+self.text[self.count]+"」</font>を書いてください ["+str(self.kakusu[self.count])+"画]")
         #self.order_label.setText(self.input.data[self.count]['text']+"を書いてください"+str(self.input.data[self.count]['kakusu'])+"画")
         self.kakusu_label.setText("現在 "+str(self.canvas.count)+"/"+str(self.kakusu[self.count]))
         self.canvas.setKakusu(self.kakusu[self.count])
@@ -240,11 +240,13 @@ class MainWindow(QWidget):
     def label_update(self):
         try:
             self.nokori_label.setText("残り:"+str(len(self.text)-self.count-1)+"文字")
-            self.order_label.setText(self.text[self.count]+"を書いてください ["+str(self.kakusu[self.count])+"画]")
+            #self.order_label.setText(self.text[self.count]+"を書いてください ["+str(self.kakusu[self.count])+"画]")
+            self.order_label.setText("<font size='7'>「"+self.text[self.count]+"」</font>を書いてください ["+str(self.kakusu[self.count])+"画]")
             #self.order_label.setText(self.input.data[self.count]['text']+"を書いてください"+str(self.input.data[self.count]['kakusu'])+"画")
             self.kakusu_label.setText("現在 " + str(self.canvas.count) + "/" + str(self.kakusu[self.count]))
         except IndexError:
-            self.order_label.setText(" "+"を書いてください"+str(0)+"画")
+            #self.order_label.setText(" "+"を書いてください"+str(0)+"画")
+            self.order_label.setText("<font size='7'>「 」</font>を書いてください ["+str(0)+"画]")
             #self.order_label.setText(self.input.data[self.count]['text']+"を書いてください"+str(self.input.data[self.count]['kakusu'])+"画")
             self.kakusu_label.setText("現在 " + str(0) + "/" + str(0))
             self.canvas.setEnabled(False)

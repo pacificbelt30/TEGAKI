@@ -142,6 +142,9 @@ class Database:
         except FileNotFoundError:
             print(filename+' is not found.')
             return ''
+        except json.decoder.JSONDecodeError:
+            print("json is gomi")
+            return ''
         return self.data
 
     # listの中の最小値 正規化したデータを戻すときに使うかもしれない
@@ -165,7 +168,7 @@ class Database:
             return False
         with open(self.file, 'w') as f:
             # with open('test.json', 'w') as f:
-            json.dump(self.data, f, indent=2)
+            json.dump(self.data, f,indent=2, ensure_ascii=False)
  
     # データの検証 だめな場合は排除？
     def validation(self):
