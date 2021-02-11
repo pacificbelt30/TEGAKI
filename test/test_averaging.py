@@ -4,6 +4,9 @@ sys.path.append('../')
 from averaging import *
 from dataquery import *
 
+g = [[0] * 10 for i in range(4)]
+print(g)
+print(len(g))
 a = Averaging()
 print(a.max_min_list)
 a.get_max_min_list("5")

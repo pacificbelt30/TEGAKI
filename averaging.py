@@ -1,4 +1,5 @@
 from dataquery import *
+from fourier import *
 # 仕様
 # 'key':{'yomi':str,'kakusu':int,'x':list,'y':list,'min_x':list,'min_y':list,'max_x':list,'max_y':list}
 
@@ -40,25 +41,51 @@ class Averaging:
     def averaging(self): # 平均化
         print("平均化開始")
         for key in self.key_list:
-            print("key = "+key+", kakusu = "+str(self.data.data[key]['kakusu']))
             self.get_max_min_list(key)
+            print("key = "+key+", kakusu = "+str(self.data.data[key]['kakusu']))
             tmp = self.data.data[key]
-            ave = list()
+            ave = list() # xとyのmin,maxの配列 min_x,min_y,max_x,max_y -> 0,1,2,3
             ave.append(self.ave_list(tmp['kakusu'],self.max_min_list['min_x']))
             ave.append(self.ave_list(tmp['kakusu'],self.max_min_list['min_y']))
             ave.append(self.ave_list(tmp['kakusu'],self.max_min_list['max_x']))
             ave.append(self.ave_list(tmp['kakusu'],self.max_min_list['max_y']))
+            # keyの文字データを作成
             self._moji[key] = {'yomi':tmp['yomi'],'kakusu':tmp['kakusu'],'x':self.x_average(key),'y':self.y_average(key),'min_x':ave[0],'min_y':ave[1],'max_x':ave[2],'max_y':ave[3]}
-            self.var_init()
+            self.var_init() # 初期化
+        # 保存
         print("DEBUG moji = "+str(self._moji))
         self._moji_file.data = self._moji
         self._moji_file.save_to_json()
 
+    # xとyの平均化関数
     def x_average(self,key:str) -> list:
-        return self.data.data[key]['normdata'][0]['x']
+        fourier = cosFourier()
+        ans = [[0]*fourier.num for i in range(self.data.data[key]['kakusu'])]
+        coe = 1/len(self.data.data[key]['normdata'])
+        for i in range(len(self.data.data[key]['normdata'])):
+            for j in range(self.data.data[key]['kakusu']):
+                tmp = fourier.fourier_M(self.data.data[key]['normdata'][i]['x'][j])
+                for k in range(len(tmp)):
+                    try:
+                        ans[j][k] = ans[j][k] + coe*tmp[k]
+                    except IndexError:
+                        print(str(len(ans))+","+str(len(ans[j]))+","+str(j)+","+str(k))
+
+        return ans
 
     def y_average(self,key:str) -> list:
-        return self.data.data[key]['normdata'][0]['y']
+        fourier = cosFourier()
+        ans = [[0]* fourier.num for i in range(self.data.data[key]['kakusu'])]
+        coe = 1/len(self.data.data[key]['normdata'])
+        for i in range(len(self.data.data[key]['normdata'])):
+            for j in range(self.data.data[key]['kakusu']):
+                tmp = fourier.fourier_M(self.data.data[key]['normdata'][i]['y'][j])
+                for k in range(len(tmp)):
+                    try:
+                        ans[j][k] = ans[j][k] + coe*tmp[k]
+                    except IndexError:
+                        print(str(len(ans))+","+str(len(ans[j]))+","+str(j)+","+str(k))
+        return ans
 
     def var_init(self): # 変数初期化
         self._min_ave = list()

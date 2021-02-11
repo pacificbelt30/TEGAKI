@@ -8,7 +8,7 @@ class cosFourier:
     def __init__(self):
         self._coefficient: list = list()  # 係数
         self._period: float = 2*math.pi  # 周期の1/2
-        self._num: int = 1000  # 要素数
+        self._num: int = 100  # 要素数
         self._limit: int = 100  # フーリエ打ち切り次数
 
     @property
@@ -46,11 +46,11 @@ class cosFourier:
 
     # フーリエ級数
     def fourier_M(self, y: list) -> list:
-        time: float = self.period / len(y)  # 1区間あたりの長さ
+        time: float = self.period / self.num  # 1区間あたりの長さ
         coea: int = self.an(y)  # an n=50まで
         coeb: int = self.bn(y)  # an n=50まで
-        ans: list = [0] * len(y)  # フーリエ級数の各次数の係数 self.num個
-        for i in range(len(y)):
+        ans: list = [0] * self.num  # フーリエ級数の各次数の係数 self.num個
+        for i in range(self.num):
             ans[i] = ans[i] + coea[0] / 2.0
             for n in range(self.limit - 1):
                 #ans[i] = ans[i] + coea[n + 1] * math.cos((n + 1) / 2.0 * i * time)
@@ -74,7 +74,7 @@ class cosFourier:
                 x1 = time*(i+1)
                 #ans[k] = ans[k] + (y[i]+y[i+1])*time/2.0*math.cos(k/2.0*i*time)
                 # ans[k] = ans[k] + (y[i]* math.cos(k / 2.0 * i * time) + y[i + 1]* math.cos(k / 2.0 * (i+1) * time)) * time / 2.0
-                ans[k] = ans[k] + (y[i] * math.cos(2 * math.pi * k * x0/ self.period) + y[i + 1] * math.cos(2 * math.pi * k * x1 / self.period)) * time / 2.0
+                ans[k] = ans[k] + (y[i] * math.cos(2.0 * math.pi * k * x0 / self.period) + y[i + 1] * math.cos(2.0 * math.pi * k * x1 / self.period)) * time / 2.0
                 # ans[k] = ans[k] + (y[i] * math.cos(k/2.0*i*time) + y[i + 1] * math.cos(k/2.0*(i+1)*time)) * time / 2.0
             ans[k] = ans[k]*coe  # 係数割
         #print("DEBUG ans")
