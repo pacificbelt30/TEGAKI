@@ -10,18 +10,14 @@ class Averaging:
         self._moji = dict()
         self._moji_filename = "../data/moji.json"
         self._moji_file.get_json(self._moji_filename)
-        self._min_ave = list()
-        self._max_ave = list()
-        self._max_min_list = dict()
-        self._max_min_list['min_x'] = list()
-        self._max_min_list['min_y'] = list()
-        self._max_min_list['max_x'] = list()
-        self._max_min_list['max_y'] = list()
-        self.data = Database()
-        self.data.get_json("../data/output.json")
+        self._data = Database()
+        self._data.get_json("../data/output.json")
         self._key_list = self.data.data.keys() # 全鍵のリスト
         self.var_init()
 
+    @property
+    def data(self) -> Database:
+        return self._data
     @property
     def min_ave(self) -> list:
         return self._min_ave
@@ -53,7 +49,7 @@ class Averaging:
             self._moji[key] = {'yomi':tmp['yomi'],'kakusu':tmp['kakusu'],'x':self.x_average(key),'y':self.y_average(key),'min_x':ave[0],'min_y':ave[1],'max_x':ave[2],'max_y':ave[3]}
             self.var_init() # 初期化
         # 保存
-        print("DEBUG moji = "+str(self._moji))
+        #print("DEBUG moji = "+str(self._moji))
         self._moji_file.data = self._moji
         self._moji_file.save_to_json()
 

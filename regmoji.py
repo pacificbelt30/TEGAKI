@@ -201,6 +201,7 @@ class MainWindow(QWidget):
         self.canvas.moji_fin.connect(self.dis_paint)
         #self.canvas.oneline_fin.connect(self.update_label)
         self.canvas.oneline_fin.connect(self.label_update)
+        self.canvas.clear()
         self.nextbtn.clicked.connect(self.next_moji)
         self.skipbtn.clicked.connect(self.skip_moji)
         self.cancelbtn.clicked.connect(self.cancel_moji)
@@ -218,6 +219,7 @@ class MainWindow(QWidget):
         self.setLayout(self.layout)
         self.font_scale.setPixelSize(20)
         self.setFont(self.font_scale)
+        self.update()
 
     # 一文字全て書き終わったら
     @Slot()

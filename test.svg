@@ -9,45 +9,113 @@
 <g fill="none" stroke="black" stroke-width="1" fill-rule="evenodd" stroke-linecap="square" stroke-linejoin="bevel" >
 
 <g fill="#ffffff" fill-opacity="1" stroke="none" transform="matrix(1,0,0,1,0,0)"
-font-family="MS UI Gothic" font-size="9" font-weight="400" font-style="normal" 
+font-family="Sans Serif" font-size="9" font-weight="400" font-style="normal" 
 >
 <rect x="0" y="0" width="500" height="500"/>
 </g>
 
 <g fill="none" stroke="#000000" stroke-opacity="1" stroke-width="1" stroke-linecap="square" stroke-linejoin="bevel" transform="matrix(1,0,0,1,0,0)"
-font-family="MS UI Gothic" font-size="9" font-weight="400" font-style="normal" 
+font-family="Sans Serif" font-size="9" font-weight="400" font-style="normal" 
 >
-<polyline fill="none" vector-effect="none" points="261,153 261,154 " />
-<polyline fill="none" vector-effect="none" points="261,154 262,156 " />
-<polyline fill="none" vector-effect="none" points="262,156 264,157 " />
-<polyline fill="none" vector-effect="none" points="264,157 266,159 " />
-<polyline fill="none" vector-effect="none" points="266,159 268,162 " />
-<polyline fill="none" vector-effect="none" points="268,162 270,169 " />
-<polyline fill="none" vector-effect="none" points="270,169 271,181 " />
-<polyline fill="none" vector-effect="none" points="271,181 273,200 " />
-<polyline fill="none" vector-effect="none" points="273,200 278,218 " />
-<polyline fill="none" vector-effect="none" points="278,218 284,237 " />
-<polyline fill="none" vector-effect="none" points="284,237 287,272 " />
-<polyline fill="none" vector-effect="none" points="287,272 290,306 " />
-<polyline fill="none" vector-effect="none" points="290,306 290,331 " />
-<polyline fill="none" vector-effect="none" points="290,331 290,335 " />
-<polyline fill="none" vector-effect="none" points="290,335 290,336 " />
-<polyline fill="none" vector-effect="none" points="290,336 290,368 " />
-<polyline fill="none" vector-effect="none" points="290,368 290,393 " />
-<polyline fill="none" vector-effect="none" points="290,393 290,403 " />
-<polyline fill="none" vector-effect="none" points="290,403 290,408 " />
-<polyline fill="none" vector-effect="none" points="290,408 290,409 " />
-</g>
-
-<g fill="#000000" fill-opacity="1" stroke="none" transform="matrix(1,0,0,1,0,0)"
-font-family="MS UI Gothic" font-size="9" font-weight="400" font-style="normal" 
->
-<rect x="289.5" y="408.5" width="1" height="1"/>
-</g>
-
-<g fill="none" stroke="#000000" stroke-opacity="1" stroke-width="1" stroke-linecap="square" stroke-linejoin="bevel" transform="matrix(1,0,0,1,0,0)"
-font-family="MS UI Gothic" font-size="9" font-weight="400" font-style="normal" 
->
+<polyline fill="none" vector-effect="none" points="380,175 -1,-9 " />
+<polyline fill="none" vector-effect="none" points="-1,-9 19,-9 " />
+<polyline fill="none" vector-effect="none" points="19,-9 0,-9 " />
+<polyline fill="none" vector-effect="none" points="0,-9 22,-9 " />
+<polyline fill="none" vector-effect="none" points="22,-9 0,-9 " />
+<polyline fill="none" vector-effect="none" points="0,-9 21,-9 " />
+<polyline fill="none" vector-effect="none" points="21,-9 6,-9 " />
+<polyline fill="none" vector-effect="none" points="6,-9 56,-6 " />
+<polyline fill="none" vector-effect="none" points="56,-6 -22,-10 " />
+<polyline fill="none" vector-effect="none" points="-22,-10 61,12 " />
+<polyline fill="none" vector-effect="none" points="61,12 -9,-10 " />
+<polyline fill="none" vector-effect="none" points="-9,-10 6,-7 " />
+<polyline fill="none" vector-effect="none" points="6,-7 -9,-11 " />
+<polyline fill="none" vector-effect="none" points="-9,-11 5,-6 " />
+<polyline fill="none" vector-effect="none" points="5,-6 -11,-10 " />
+<polyline fill="none" vector-effect="none" points="-11,-10 -14,-7 " />
+<polyline fill="none" vector-effect="none" points="-14,-7 42,-2 " />
+<polyline fill="none" vector-effect="none" points="42,-2 23,0 " />
+<polyline fill="none" vector-effect="none" points="23,0 2,-7 " />
+<polyline fill="none" vector-effect="none" points="2,-7 62,45 " />
+<polyline fill="none" vector-effect="none" points="62,45 0,-9 " />
+<polyline fill="none" vector-effect="none" points="0,-9 3,-1 " />
+<polyline fill="none" vector-effect="none" points="3,-1 9,-6 " />
+<polyline fill="none" vector-effect="none" points="9,-6 7,0 " />
+<polyline fill="none" vector-effect="none" points="7,0 262,176 " />
+<polyline fill="none" vector-effect="none" points="262,176 8,1 " />
+<polyline fill="none" vector-effect="none" points="8,1 14,-4 " />
+<polyline fill="none" vector-effect="none" points="14,-4 6,1 " />
+<polyline fill="none" vector-effect="none" points="6,1 8,-9 " />
+<polyline fill="none" vector-effect="none" points="8,-9 70,63 " />
+<polyline fill="none" vector-effect="none" points="70,63 20,-3 " />
+<polyline fill="none" vector-effect="none" points="20,-3 61,14 " />
+<polyline fill="none" vector-effect="none" points="61,14 202,27 " />
+<polyline fill="none" vector-effect="none" points="202,27 -105,-16 " />
+<polyline fill="none" vector-effect="none" points="-105,-16 -46,-15 " />
+<polyline fill="none" vector-effect="none" points="-46,-15 -24,-2 " />
+<polyline fill="none" vector-effect="none" points="-24,-2 -31,-19 " />
+<polyline fill="none" vector-effect="none" points="-31,-19 -23,-1 " />
+<polyline fill="none" vector-effect="none" points="-23,-1 -24,-15 " />
+<polyline fill="none" vector-effect="none" points="-24,-15 27,62 " />
+<polyline fill="none" vector-effect="none" points="27,62 -14,-25 " />
+<polyline fill="none" vector-effect="none" points="-14,-25 50,61 " />
+<polyline fill="none" vector-effect="none" points="50,61 5,6 " />
+<polyline fill="none" vector-effect="none" points="5,6 0,10 " />
+<polyline fill="none" vector-effect="none" points="0,10 0,-2 " />
+<polyline fill="none" vector-effect="none" points="0,-2 -6,14 " />
+<polyline fill="none" vector-effect="none" points="-6,14 -5,-4 " />
+<polyline fill="none" vector-effect="none" points="-5,-4 -7,6 " />
+<polyline fill="none" vector-effect="none" points="-7,6 -5,-5 " />
+<polyline fill="none" vector-effect="none" points="-5,-5 272,573 " />
+<polyline fill="none" vector-effect="none" points="272,573 -5,-5 " />
+<polyline fill="none" vector-effect="none" points="-5,-5 -6,7 " />
+<polyline fill="none" vector-effect="none" points="-6,7 -4,-3 " />
+<polyline fill="none" vector-effect="none" points="-4,-3 -4,17 " />
+<polyline fill="none" vector-effect="none" points="-4,17 3,0 " />
+<polyline fill="none" vector-effect="none" points="3,0 3,16 " />
+<polyline fill="none" vector-effect="none" points="3,16 13,13 " />
+<polyline fill="none" vector-effect="none" points="13,13 75,88 " />
+<polyline fill="none" vector-effect="none" points="75,88 -2,-15 " />
+<polyline fill="none" vector-effect="none" points="-2,-15 23,86 " />
+<polyline fill="none" vector-effect="none" points="23,86 -22,-17 " />
+<polyline fill="none" vector-effect="none" points="-22,-17 -19,3 " />
+<polyline fill="none" vector-effect="none" points="-19,3 -34,-29 " />
+<polyline fill="none" vector-effect="none" points="-34,-29 -8,8 " />
+<polyline fill="none" vector-effect="none" points="-8,8 -26,-13 " />
+<polyline fill="none" vector-effect="none" points="-26,-13 -70,-18 " />
+<polyline fill="none" vector-effect="none" points="-70,-18 150,63 " />
+<polyline fill="none" vector-effect="none" points="150,63 75,56 " />
+<polyline fill="none" vector-effect="none" points="75,56 14,4 " />
+<polyline fill="none" vector-effect="none" points="14,4 67,124 " />
+<polyline fill="none" vector-effect="none" points="67,124 -2,-13 " />
+<polyline fill="none" vector-effect="none" points="-2,-13 -1,7 " />
+<polyline fill="none" vector-effect="none" points="-1,7 42,32 " />
+<polyline fill="none" vector-effect="none" points="42,32 16,25 " />
+<polyline fill="none" vector-effect="none" points="16,25 189,314 " />
+<polyline fill="none" vector-effect="none" points="189,314 16,25 " />
+<polyline fill="none" vector-effect="none" points="16,25 42,35 " />
+<polyline fill="none" vector-effect="none" points="42,35 -3,7 " />
+<polyline fill="none" vector-effect="none" points="-3,7 -6,-14 " />
+<polyline fill="none" vector-effect="none" points="-6,-14 119,131 " />
+<polyline fill="none" vector-effect="none" points="119,131 9,4 " />
+<polyline fill="none" vector-effect="none" points="9,4 59,69 " />
+<polyline fill="none" vector-effect="none" points="59,69 76,68 " />
+<polyline fill="none" vector-effect="none" points="76,68 -25,-13 " />
+<polyline fill="none" vector-effect="none" points="-25,-13 -3,-8 " />
+<polyline fill="none" vector-effect="none" points="-3,-8 4,15 " />
+<polyline fill="none" vector-effect="none" points="4,15 -24,-31 " />
+<polyline fill="none" vector-effect="none" points="-24,-31 -1,11 " />
+<polyline fill="none" vector-effect="none" points="-1,11 -5,-10 " />
+<polyline fill="none" vector-effect="none" points="-5,-10 35,47 " />
+<polyline fill="none" vector-effect="none" points="35,47 21,14 " />
+<polyline fill="none" vector-effect="none" points="21,14 53,66 " />
+<polyline fill="none" vector-effect="none" points="53,66 16,9 " />
+<polyline fill="none" vector-effect="none" points="16,9 0,12 " />
+<polyline fill="none" vector-effect="none" points="0,12 4,-2 " />
+<polyline fill="none" vector-effect="none" points="4,-2 16,28 " />
+<polyline fill="none" vector-effect="none" points="16,28 5,-1 " />
+<polyline fill="none" vector-effect="none" points="5,-1 -4,-2 " />
+<polyline fill="none" vector-effect="none" points="-4,-2 0,-8 " />
 </g>
 </g>
 </svg>

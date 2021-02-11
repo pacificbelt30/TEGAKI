@@ -14,19 +14,15 @@ class cosFourier:
     @property
     def coefficient(self) -> list:
         return self._coefficient
-
     @coefficient.setter
     def coefficient(self, coefficient):
         self._coefficient = coefficient
-
     @property
     def period(self) -> float:
         return self._period
-
     @property
     def num(self) -> int:
         return self._num
-
     @property
     def limit(self) -> int:
         return self._limit
@@ -53,13 +49,7 @@ class cosFourier:
         for i in range(self.num):
             ans[i] = ans[i] + coea[0] / 2.0
             for n in range(self.limit - 1):
-                #ans[i] = ans[i] + coea[n + 1] * math.cos((n + 1) / 2.0 * i * time)
-                #ans[i] = ans[i] + coea[n + 1] * math.cos((n + 1)* i * 2.0 * math.pi / self.period)
-                # ans[i] = ans[i] + coea[n + 1] * math.cos((n + 1) / 2.0 * i * time) + coeb[n + 1] * math.sin((n + 1) / 2.0 * i * time)
                 ans[i] = ans[i] + coea[n + 1] * math.cos((n + 1) * i * 2 * math.pi *time/ self.period) + coeb[n + 1] * math.sin((n + 1) * i * 2 * math.pi *time/ self.period)
-                # ans[i] = ans[i] + coea[n + 1] * math.cos((n + 1) * i * 2 * math.pi *time/ self.period)
-
-        # print(ans)
         return ans
 
     # 余弦フーリエのみなのでanのみを求めるだけで良い
@@ -72,13 +62,8 @@ class cosFourier:
             for i in range(length-1):
                 x0 = time*i
                 x1 = time*(i+1)
-                #ans[k] = ans[k] + (y[i]+y[i+1])*time/2.0*math.cos(k/2.0*i*time)
-                # ans[k] = ans[k] + (y[i]* math.cos(k / 2.0 * i * time) + y[i + 1]* math.cos(k / 2.0 * (i+1) * time)) * time / 2.0
                 ans[k] = ans[k] + (y[i] * math.cos(2.0 * math.pi * k * x0 / self.period) + y[i + 1] * math.cos(2.0 * math.pi * k * x1 / self.period)) * time / 2.0
-                # ans[k] = ans[k] + (y[i] * math.cos(k/2.0*i*time) + y[i + 1] * math.cos(k/2.0*(i+1)*time)) * time / 2.0
             ans[k] = ans[k]*coe  # 係数割
-        #print("DEBUG ans")
-        # print(ans)
         return ans
 
     def bn(self, y: list) -> list:
@@ -90,13 +75,8 @@ class cosFourier:
             for i in range(length-1):
                 x0 = time*i
                 x1 = time*(i+1)
-                # ans[k] = ans[k] + (y[i]*math.sin(k/2.0*i*time)+y[i+1]*math.sin(k/2.0*(i+1)*time))*time/2.0
-                # ans[k] = ans[k] + (y[i] * math.sin(2 * math.pi * k * i *time/ self.period) + y[i + 1] * math.sin(2 * math.pi * k * (i+1) *time / self.period)) * time / 2.0
                 ans[k] = ans[k] + (y[i] * math.sin(2 * math.pi * k * x0/ self.period) + y[i + 1] * math.sin(2 * math.pi * k * x1 / self.period)) * time / 2.0
-                # ans[k] = ans[k] + (y[i] * math.sin(k/2.0*i*time) + y[i + 1] * math.sin(k/2.0*(i+1)*time)) * time / 2.0
             ans[k] = ans[k]*coe  # 係数割
-        #print("DEBUG ans")
-        # print(ans)
         return ans
 
     # def calc_fourier(self,y:list) -> list:
@@ -116,8 +96,11 @@ class cosFourier:
         a = self.fourier_M(y)
         print(a)
         tmp = list()
-        for i in range(len(y)):
+        time = self.period/len(a)
+        for i in range(len(a)):
             tmp.append(i*time)
             # print(str(i*time)+","+str(a[i]))
+        print(len(tmp))
+        print(len(a))
         plt.plot(tmp, a)
         plt.show()
