@@ -27,6 +27,7 @@ class Canvas(QWidget):
         # self.painter.setPen(QPen(Qt.black,2, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
         self.setGeometry(self.canvas_width, self.canvas_height, self.canvas_width, self.canvas_height)
         self.setFixedSize(self.canvas_width, self.canvas_height)
+        self.initUI()
 
     # property, setter define
     @property
@@ -78,6 +79,10 @@ class Canvas(QWidget):
     def is_press(self,press:bool):
         self._is_press = press
 
+    def initUI(self):
+        self.clear()
+        print("Canvas:initUI()")
+
     # 描く文字の画数をセット
     def setKakusu(self, num):
         self.kakusu = num
@@ -128,6 +133,9 @@ class Canvas(QWidget):
         painter.setPen(QPen(Qt.white, 2, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
         rect = QRect(0, 0, self.canvas_width, self.canvas_height)
         painter.fillRect(rect, Qt.white)
+        painter.setPen(QPen(Qt.gray, 2, Qt.DashLine, Qt.RoundCap, Qt.RoundJoin))
+        painter.drawLine(QPoint(self.canvas_width/2,0),QPoint(self.canvas_width/2,self.canvas_height))
+        painter.drawLine(QPoint(0,self.canvas_height/2),QPoint(self.canvas_width,self.canvas_height/2))
         self.update()
 
     def paintEvent(self, event):
@@ -196,7 +204,6 @@ class MainWindow(QWidget):
         self.nextbtn.clicked.connect(self.next_moji)
         self.skipbtn.clicked.connect(self.skip_moji)
         self.cancelbtn.clicked.connect(self.cancel_moji)
-        self.canvas.setStyleSheet("background-color:#444444")
         self.cancelbtn.setText("取り消し")
         self.nextbtn.setText("次へ")
         self.skipbtn.setText("スキップ")

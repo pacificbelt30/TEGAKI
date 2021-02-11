@@ -64,9 +64,9 @@ class Database:
     @property
     def data(self) -> dict:
         return self._data
-    #@data.setter
-    #def data(self,data:dict):
-        #self._data = data
+    @data.setter
+    def data(self,data:dict):
+        self._data = data
     @property
     def file(self) -> str:
         return self._file
@@ -141,10 +141,10 @@ class Database:
                 self._data = json.load(f)
         except FileNotFoundError:
             print(filename+' is not found.')
-            return ''
+            return dict()
         except json.decoder.JSONDecodeError:
             print("json is gomi")
-            return ''
+            return dict()
         return self.data
 
     # listの中の最小値 正規化したデータを戻すときに使うかもしれない
