@@ -22,7 +22,7 @@ class ReportArea(QTextEdit):
         self.font_size = 15
         self.line_count = 0
         self.line_word_count = 0
-        font = QFont()
+        font = QFont("MS Gothic",10,QFont.Medium)
         font.setPointSize(self.font_size)
         font_met = QFontMetrics(font)
         self.setFont(font)
@@ -33,6 +33,7 @@ class ReportArea(QTextEdit):
         self.setFixedHeight(font_met.height()*self.row)
         self.setViewportMargins(font_met.width('x')*3, 0, 0, 0)
         # self.tmp = QTextBlock()
+        self.setFontUnderline(True)
 
     # DEBUG用
     def print_plaintext(self):
