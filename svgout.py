@@ -9,18 +9,35 @@ from PySide2.QtWidgets import *
 from dataquery import *
 
 
-class Svgenerator:
+class A4_svgenerator:
     def __init__(self):
         self._svg: QSvgGenerator = QSvgGenerator()
+        self._title: str = ""
         self._row: int = 30  # 行
         self._column: int = 30  # 列
         self._pixel: int = 100  # 一文字分のピクセル
-        self._mojidata: Database = Database()
+        self._head_margin: int = 300
+        self._bottom_margin: int = 300
+        self._right_margin: int = 300
+        self._left_margin: int = 300
+        self._line_margin: int = 20
+        self._mojidata: dict = dict()
+        self._database: Database = Database()
         self._text: str = ""
+
+        self.svg.setFileName(self.title)
+        self.svg.setSize(QSize(self.row*(self.line_margin+self.pixel)+(self.head_margin+self.bottom_margin),self.column*(self.pixel)+(self.left_margin+self.right_margin) ))
+        self.svg.setViewBox(QRect(0, 0,self.row*(self.line_margin+self.pixel)+(self.head_margin+self.bottom_margin),self.column*(self.pixel)+(self.left_margin+self.right_margin)))
+        self.svg.setTitle(self.title)
+        self.svg.setDescription("from pySide2 QtSvg.")
 
     @property
     def svg(self):
         return self._svg
+
+    @property
+    def title(self):
+        return self._title
 
     @property
     def row(self):
@@ -35,8 +52,32 @@ class Svgenerator:
         return self._pixel
 
     @property
+    def head_margin(self):
+        return self._head_margin
+
+    @property
+    def bottom_margin(self):
+        return self._bottom_margin
+
+    @property
+    def right_margin(self):
+        return self._right_margin
+
+    @property
+    def left_margin(self):
+        return self._left_margin
+
+    @property
+    def line_margin(self):
+        return self._line_margin
+
+    @property
     def mojidata(self):
         return self._mojidata
+
+    @property
+    def database(self):
+        return self._database
 
     @property
     def text(self):
@@ -47,15 +88,30 @@ class Svgenerator:
         self._text = text
 
     def gen(self):
+        painter = QPainter()
+        painter.begin(self.svg)
+        painter.setPen(Qt.black)
+        rect = QRect(0, 0,self.row*(self.line_margin+self.pixel)+(self.head_margin+self.bottom_margin),self.column*(self.pixel)+(self.left_margin+self.right_margin))
+        painter.fillRect(rect, Qt.white)
+        i: int = 0
         while True:
-            i: int = 0
             j: int = 0
             if i == self.row: break
             i = i + 1
             while True:
                 if j == self.column: break
                 if self.text[j] == '\n': break
+                self.draw_moji(self.mojidata[self.text[j]])
                 j = j + 1
+
+    def draw_moji(self,moji:list):
+        painter = QPainter()
+        painter.begin(self.svg)
+        painter.setPen(Qt.black)
+        for i in range(len(moji)):
+            for j in range(len(moji[i])):
+                painter.drawLine(x[i][j] * self.pixel, y[i][j] * self.pixel, x[i][j + 1] * self.pixel, y[i][j + 1] * self.pixel)
+        painter.end()
 
 
 x = [[22, 23, 26, 28, 32, 36, 39, 42, 50, 55, 61, 67, 70, 72, 73, 74],
