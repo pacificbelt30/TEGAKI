@@ -27,10 +27,10 @@ class A4_svgenerator:
         self._text: str = ""
 
         self.svg.setFileName(self.title)
-        # self.svg.setSize(QSize(self.row*(self.line_margin+self.pixel)+(self.head_margin+self.bottom_margin),self.column*self.pixel+(self.left_margin+self.right_margin)))
-        # self.svg.setViewBox(QRect(0, 0,self.row*(self.line_margin+self.pixel)+(self.head_margin+self.bottom_margin),self.column*self.pixel+(self.left_margin+self.right_margin)))
-        self.svg.setSize(QSize(500,500))
-        self.svg.setViewBox(QRect(0, 0,500,500))
+        self.svg.setSize(QSize(self.row*(self.line_margin+self.pixel)+(self.head_margin+self.bottom_margin),self.column*self.pixel+(self.left_margin+self.right_margin)))
+        self.svg.setViewBox(QRect(0, 0,self.row*(self.line_margin+self.pixel)+(self.head_margin+self.bottom_margin),self.column*self.pixel+(self.left_margin+self.right_margin)))
+        # self.svg.setSize(QSize(500,500))
+        # self.svg.setViewBox(QRect(0, 0,500,500))
         self.svg.setTitle(self.title)
         self.svg.setDescription("from pySide2 QtSvg.")
 
@@ -94,8 +94,8 @@ class A4_svgenerator:
         painter = QPainter()
         painter.begin(self.svg)
         painter.setPen(Qt.black)
-        # rect = QRect(0, 0,self.row*(self.line_margin+self.pixel)+(self.head_margin+self.bottom_margin),self.column*(self.pixel)+(self.left_margin+self.right_margin))
-        rect = QRect(0, 0,500,500)
+        rect = QRect(0, 0,self.row*(self.line_margin+self.pixel)+(self.head_margin+self.bottom_margin),self.column*(self.pixel)+(self.left_margin+self.right_margin))
+        # rect = QRect(0, 0,500,500)
         painter.fillRect(rect, Qt.white)
         fin: int = len(self.text)
         count:int = 0
@@ -106,9 +106,12 @@ class A4_svgenerator:
             i = i + 1
             while True:
                 if j == self.column or count == fin: break
-                if self.text[j] == '\n': break
+                if self.text[count] == '\n':
+                    print("return break")
+                    count = count + 1
+                    break
                 try:
-                    self.draw_moji(self.mojidata[self.text[j]],painter)
+                    self.draw_moji(self.mojidata[self.text[count]],painter,i,j)
                     print(self.mojidata[self.text[j]])
                 except KeyError:
                     import traceback
@@ -117,10 +120,14 @@ class A4_svgenerator:
                 j = j + 1
                 count = count + 1
         painter.end()
+        print("DEBUG:count"+str(count))
 
-    def draw_moji(self,moji:list,painter:QPainter):
+    def draw_moji(self,moji:list,painter:QPainter,line:int,row:int):
+        top_margin = line*(self.pixel+self.line_margin)+self.head_margin
+        left_margin = row*self.pixel+self.left_margin
         for i in range(len(moji['x'])):
             for j in range(len(moji['x'][i])-1):
-                print(str(i) + " ," + str(j) + " ," + str(moji['x']) + " ," + str(moji['y']))
+                # print(str(i) + " ," + str(j) + " ," + str(moji['x']) + " ," + str(moji['y']))
                 # painter.drawLine(moji['x'][i][j] * self.pixel, moji['y'][i][j] * self.pixel, moji['x'][i][j + 1] * self.pixel, moji['y'][i][j + 1] * self.pixel)
-                painter.drawLine(moji['x'][i][j],moji['y'][i][j], moji['x'][i][j + 1], moji['y'][i][j + 1])
+                # painter.drawLine(moji['x'][i][j],moji['y'][i][j], moji['x'][i][j + 1], moji['y'][i][j + 1])
+                painter.drawLine(left_margin+moji['x'][i][j],top_margin+moji['y'][i][j], left_margin+moji['x'][i][j + 1], top_margin+moji['y'][i][j + 1])

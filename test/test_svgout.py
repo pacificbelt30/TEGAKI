@@ -99,10 +99,12 @@ print("end debug")
 print("a4")
 
 a4 = A4_svgenerator()
-a4._text = "123412341234"
+a4._text = "1234123412341234123412341234123412341234123412341234123412341234\n44444444\n5555555555555555555555555555555555555"
 a4.mojidata['1'] = a4.database.data['1']['data'][0]
 a4.mojidata['2'] = a4.database.data['2']['data'][0]
 a4.mojidata['3'] = a4.database.data['3']['data'][0]
 a4.mojidata['4'] = a4.database.data['4']['data'][0]
 a4.mojidata['5'] = a4.database.data['5']['data'][0]
 a4.gen()
+print(a4._text)
+print(len(a4._text))
