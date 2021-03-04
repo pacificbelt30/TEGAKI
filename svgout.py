@@ -15,7 +15,7 @@ class A4_svgenerator:
         self._title: str = "test.svg"
         self._row: int = 30  # 行
         self._column: int = 30  # 列
-        self._pixel: int = 500  # 一文字分のピクセル
+        self._pixel: int = 600  # 一文字分のピクセル
         self._head_margin: int = self.pixel*3
         self._bottom_margin: int = self.pixel*3
         self._right_margin: int = self.pixel*3

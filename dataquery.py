@@ -92,7 +92,8 @@ class Database:
             return False
         #self.data[key]['data'].append({'x':x,'y':y,'min_x'})
         #self.data[key]['data'].append({"data": {"x": x, "y": y, "min_x":self.minlist(x),"min_y":self.minlist(y), "max_x":self.maxlist(x), "max_y":self.maxlist(y)}})
-        self.data[key]['data'].append({"x": x, "y": y, "min_x":self.minlist(x),"min_y":self.minlist(y), "max_x":self.maxlist(x), "max_y":self.maxlist(y)})
+        #self.data[key]['data'].append({"x": x, "y": y, "min_x":self.minlist(x),"min_y":self.minlist(y), "max_x":self.maxlist(x), "max_y":self.maxlist(y)})
+        self.data[key]['data'].append({"x": x, "y": y, "min_x":self.minlist(x,600),"min_y":self.minlist(y,600), "max_x":self.maxlist(x,600), "max_y":self.maxlist(y,600)})
         self.data[key]['datanum'] = self.data[key]['datanum'] + 1
         return True
 
@@ -148,17 +149,17 @@ class Database:
         return self.data
 
     # listの中の最小値 正規化したデータを戻すときに使うかもしれない
-    def minlist(self,x:list) -> list:
+    def minlist(self,x:list,pixel:int) -> list:
         ans = list()
         for i in x:
-            ans.append(min(i))
+            ans.append(min(i)/pixel)
         return ans
 
     # listの中の最大値 正規化したデータを戻すときに使うかもしれない
-    def maxlist(self,x:list) -> list:
+    def maxlist(self,x:list,pixel:int) -> list:
         ans = list()
         for i in x:
-            ans.append(max(i))
+            ans.append(max(i)/pixel)
         return ans
 
     # 現在のself.dataをjsonとしてself.fileに保存

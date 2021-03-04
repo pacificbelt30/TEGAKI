@@ -164,8 +164,8 @@ class MainWindow(QWidget):
         self.title = "文字登録"
         self.width = 800
         self.height = 800
-        #self.input = InputData("data/input.json")
-        self.input = InputData("data/num.json")
+        self.input = InputData("data/input.json")
+        #self.input = InputData("data/num.json")
         #self.text = ["あ", "い", "う", "え", "お"]
         #self.kakusu = [3, 2, 2, 2, 3]
         self.text = self.input.get_all_keydata('text')
