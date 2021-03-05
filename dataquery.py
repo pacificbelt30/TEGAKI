@@ -25,7 +25,7 @@ class InputData:
     # 入力用のjsonデータを返す
     def get_json(self,filename:str) -> list:
         try:
-            with open(filename) as f:
+            with open(filename,encoding="utf-8") as f:
                 data = json.load(f)
                 self.length = len(data)
         except FileNotFoundError:
@@ -138,7 +138,7 @@ class Database:
     def get_json(self,filename:str) -> dict:
         self.file = filename
         try:
-            with open(filename) as f:
+            with open(filename,encoding="utf-8") as f:
                 self._data = json.load(f)
         except FileNotFoundError:
             print(filename+' is not found.')
@@ -167,7 +167,7 @@ class Database:
         if self.file == "":
             print("filename was not setting")
             return False
-        with open(self.file, 'w') as f:
+        with open(self.file, 'w',encoding="utf-8") as f:
             # with open('test.json', 'w') as f:
             json.dump(self.data, f,indent=2, ensure_ascii=False)
  
