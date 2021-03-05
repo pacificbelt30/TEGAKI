@@ -38,6 +38,7 @@ python main.py
 - 実際のデータを使ったフーリエテスト
 - jsonの改行 ○ めんどくさい
 - 複数ページ
+- svgViewer
 
 # 問題点
 - cssが適用されない

@@ -69,7 +69,7 @@ y = [[53, 53, 53, 53, 53, 53, 52, 51, 49, 47, 45, 45, 45, 45, 45, 45],
 print("start debug")
 app = QApplication(sys.argv)
 svg_gen = QSvgGenerator()
-svg_gen.setFileName("test.svg")
+svg_gen.setFileName("svg.svg")
 svg_gen.setSize(QSize(500, 500))
 svg_gen.setViewBox(QRect(0, 0, 500, 500))
 svg_gen.setTitle("echo あ")
@@ -87,33 +87,73 @@ painter.fillRect(rect, Qt.white)
 # painter.drawText(rect, Qt.AlignCenter, "Hello SVG")
 for i in range(len(x)):
     for j in range(len(x[i]) - 1):
-        # painter.drawLine(x[i][j],y[i][j],x[i][j+1],y[i][j+1])
-        painter.drawLine(x[i][j] * 50, y[i][j] * 50, x[i][j + 1] * 50, y[i][j + 1] * 50)
+        painter.drawLine(x[i][j]*5,y[i][j]*5,x[i][j+1]*5,y[i][j+1]*5)
+        # painter.drawLine(x[i][j] * 50, y[i][j] * 50, x[i][j + 1] * 50, y[i][j + 1] * 50)
 
 # for i in range(len(x)-1):
 # print(len(x))
 # painter.drawLine(int(x[i]),int(y[i]),int(x[i+1]),int(y[i+1]))
 painter.end()
 
+class SVGView(QGraphicsView):
+    def __init__(self):
+        super(SVGView, self).__init__()
+        self.ratio = 1.0
+        self.count = 10
+        self.upperlimit = 30
+        self.lowerlimit = 1
+
+    def wheelEvent(self, event:QWheelEvent):
+        if event.delta() >= 0:
+            self.count = self.count + 1
+            ratio = self.count / (self.count-1)
+            if self.count > self.upperlimit:
+                self.count = self.upperlimit
+                return
+            # self.scale(1.1,1.1)
+            self.scale(ratio,ratio)
+            self.ratio = ratio*(self.count-1)/10
+        else:
+            self.count = self.count - 1
+            ratio = self.count / (self.count+1)
+            if self.count < self.lowerlimit:
+                self.count = self.lowerlimit
+                return
+            # self.scale(0.9,0.9)
+            self.scale(ratio,ratio)
+            self.ratio = ratio*(self.count+1)/10
+        print("now ratio :" + str(self.ratio))
+
+
 class MainWindow(QWidget):
     def __init__(self, parent=None, window=None):
         super(MainWindow, self).__init__()
+        self.window_width = 1000
+        self.window_height = 1000
         self.setGeometry(100,100,1000,1000)
-        self.setFixedSize(1000,1000)
-        self.view = QGraphicsView()
+        self.setFixedSize(self.window_width,self.window_height)
+        # self.view = QGraphicsView()
+        self.view = SVGView()
         self.scene = QGraphicsScene()
         self.rect = QRect(0,0,500,500)
-        self.svg = QGraphicsSvgItem("test.svg")
-        self.image = QImage("test.jpg")
+        # self.svg = QGraphicsSvgItem("test.svg")
+        self.svg = QGraphicsSvgItem("svg.svg")
+        self.image = QImage("test.png")
         self.pix = QGraphicsPixmapItem(QPixmap.fromImage(self.image))
         # self.scene.setSceneRect(rect)
-        # self.scene.addItem(self.svg)
-        self.scene.addItem(self.pix)
+        self.fill_background()
+        self.scene.addItem(self.svg)
+        # self.scene.addItem(self.pix)
         # self.scene.addRect(rect,QPen(Qt.transparent),QBrush(Qt.yellow))
+        # self.view.scale(0.2,0.2)  # scaling
         self.view.setScene(self.scene)
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.view)
         self.setLayout(self.layout)
+
+    def fill_background(self):
+        self.view.setBackgroundBrush(Qt.gray)
+        # self.scene.setBackgroundBrush(Qt.gray)
 
 
 ex = MainWindow()
