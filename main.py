@@ -93,7 +93,8 @@ class ReportArea(QTextEdit):
             tmp = tmp[:]
 
 
-class MainWindow(QWidget):
+#class MainWindow(QWidget):
+class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.row_limit_words = 30
@@ -109,9 +110,55 @@ class MainWindow(QWidget):
         layout = QVBoxLayout(self)
         layout.addWidget(self.btn)
         layout.addWidget(self.textbox)
+        self.widget = QWidget()
+        self.widget.setLayout(layout)
+        self.setCentralWidget(self.widget)
         self.setGeometry(300, 50, 650, 550)
         self.setFixedSize(650, 550) # サイズ変更不可能にした
         self.setWindowTitle('QCheckBox')
+        self.initUI()
+
+    def initUI(self):
+        self.create_menu_bar()
+        
+    def create_menu_bar(self):
+        self.menu = self.menuBar()
+        self.filemenu = self.menu.addMenu('&File')
+        openAct = QAction(self.style().standardIcon(QStyle.SP_DialogOpenButton), 'Open', self)
+        openAct.setShortcut('Ctrl+O')
+        openAct.triggered.connect(self.getOpenFileName)
+        saveAct = QAction(self.style().standardIcon(QStyle.SP_DialogOpenButton), 'Save', self)
+        saveAct.setShortcut('Ctrl+S')
+        saveAct.triggered.connect(self.getSaveFileName)
+        saveAsAct = QAction(self.style().standardIcon(QStyle.SP_DialogOpenButton), 'Save as', self)
+        saveAsAct.setShortcut('Ctrl+Shift+S')
+        saveAsAct.triggered.connect(self.getSaveAsFileName)
+        self.filemenu.addAction(openAct)
+        self.filemenu.addAction(saveAct)
+        self.filemenu.addAction(saveAsAct)
+
+    def getOpenFileName(self):
+        (fileName, selectedFilter) = QFileDialog.getOpenFileName(self,filter="PlainText Files (*.txt)")
+        if fileName == "":
+            print("cannot open: file name is empty")
+        print("open:"+fileName)
+        try:
+            with open(fileName, 'r') as f:
+                txt = f.read()
+        except:
+            print("FILEOPENERROR")
+        self.textbox.setPlainText(txt)
+        return fileName
+
+    def getSaveFileName(self):
+        (fileName, selectedFilter) = QFileDialog.getSaveFileName(self,filter="PlainText Files (*.txt)")
+        print("save:"+fileName)
+        return fileName
+
+    def getSaveAsFileName(self):
+        (fileName, selectedFilter) = QFileDialog.getSaveFileName(self,filter="PlainText Files (*.txt)")
+        print("save as:"+fileName)
+        return fileName
 
     def print_plaintext(self):
         print(self.textbox.toPlainText())
