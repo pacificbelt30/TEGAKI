@@ -156,9 +156,9 @@ class MainWindow(QWidget):
         # self.scene.setBackgroundBrush(Qt.gray)
 
 
-ex = MainWindow()
-ex.show()
-sys.exit(app.exec_())
+#ex = MainWindow()
+#ex.show()
+#sys.exit(app.exec_())
 print("end debug")
 
 print("a4")
