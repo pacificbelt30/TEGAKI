@@ -158,7 +158,8 @@ class Canvas(QWidget):
         self.image = changeImage
 
 
-class MainWindow(QWidget):
+#class MainWindow(QWidget):
+class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.title = "文字登録"
@@ -216,10 +217,70 @@ class MainWindow(QWidget):
         self.layout.addWidget(self.kakusu_label)
         self.layout.addWidget(self.canvas)
         self.layout.addLayout(self.btnlayout)
-        self.setLayout(self.layout)
+        self.widget = QWidget()
+        self.widget.setLayout(self.layout)
+        self.setCentralWidget(self.widget)
+        #self.setLayout(self.layout)
         self.font_scale.setPixelSize(20)
         self.setFont(self.font_scale)
+        self.create_menu_bar()
         self.update()
+
+    def create_menu_bar(self):
+        self.exgroup = QActionGroup(self)
+        self.exgroup.setExclusive(True)
+        self.menu = self.menuBar()
+        self.filemenu = self.menu.addMenu('&File')
+        #num = QAction(self.style().standardIcon(QStyle.SP_DialogOpenButton), '数字', self)
+        num = QAction( '数字', self)
+        hira = QAction( 'ひらがな', self)
+        kata = QAction( 'カタカナ', self)
+        alpha = QAction( 'アルファベット', self)
+        joyo = QAction( '常用漢字', self)
+        #openAct.setShortcut('Ctrl+O')
+        num.setCheckable(True)
+        hira.setCheckable(True)
+        kata.setCheckable(True)
+        alpha.setCheckable(True)
+        joyo.setCheckable(True)
+        num.triggered.connect(lambda: self.change_input_data(0))
+        hira.triggered.connect(lambda: self.change_input_data(1))
+        kata.triggered.connect(lambda: self.change_input_data(2))
+        alpha.triggered.connect(lambda: self.change_input_data(3))
+        joyo.triggered.connect(lambda: self.change_input_data(4))
+        self.filemenu.addAction(num)
+        self.filemenu.addAction(hira)
+        self.filemenu.addAction(kata)
+        self.filemenu.addAction(alpha)
+        self.filemenu.addAction(joyo)
+        num.setActionGroup(self.exgroup)
+        hira.setActionGroup(self.exgroup)
+        kata.setActionGroup(self.exgroup)
+        alpha.setActionGroup(self.exgroup)
+        joyo.setActionGroup(self.exgroup)
+
+    def change_input_data(self,num:int):
+        input_file_name = ""
+        if num == 0:
+            input_file_name = "data/num.json"
+        elif num == 1:
+            input_file_name = "data/input.json"
+        elif num == 2:
+            input_file_name = "data/input.json"
+        elif num == 3:
+            input_file_name = "data/input.json"
+        elif num == 4:
+            input_file_name = "data/input.json"
+        else:
+            input_file_name = "data/num.json"
+
+        self.input = InputData(input_file_name)
+        self.text = self.input.get_all_keydata('text')
+        self.kakusu = self.input.get_all_keydata('kakusu')
+        self.count = 0
+        self.canvas.clear()
+        self.label_update()
+        
 
     # 一文字全て書き終わったら
     @Slot()
