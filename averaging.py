@@ -56,26 +56,33 @@ class Averaging:
     # xとyの平均化関数
     def x_average(self,key:str) -> list:
         fourier = cosFourier()
+        datakey = 'normdata'
+        datakey = 'data'
         ans = [[0]*fourier.num for i in range(self.data.data[key]['kakusu'])]
-        coe = 1/len(self.data.data[key]['normdata'])
-        for i in range(len(self.data.data[key]['normdata'])):
+        coe = 1/len(self.data.data[key][datakey])
+        print(key + " x coe:"+str(coe))
+        for i in range(len(self.data.data[key][datakey])):
             for j in range(self.data.data[key]['kakusu']):
-                tmp = fourier.fourier_M(self.data.data[key]['normdata'][i]['x'][j])
+                tmp = fourier.fourier_M(self.data.data[key][datakey][i]['x'][j])
                 for k in range(len(tmp)):
                     try:
                         ans[j][k] = ans[j][k] + coe*tmp[k]
                     except IndexError:
                         print(str(len(ans))+","+str(len(ans[j]))+","+str(j)+","+str(k))
-
         return ans
 
     def y_average(self,key:str) -> list:
         fourier = cosFourier()
+        datakey = 'normdata'
+        datakey = 'data'
         ans = [[0]* fourier.num for i in range(self.data.data[key]['kakusu'])]
-        coe = 1/len(self.data.data[key]['normdata'])
-        for i in range(len(self.data.data[key]['normdata'])):
+        coe = 1/len(self.data.data[key][datakey])
+        print(key + " y coe:"+str(coe))
+        for i in range(len(self.data.data[key][datakey])):
             for j in range(self.data.data[key]['kakusu']):
-                tmp = fourier.fourier_M(self.data.data[key]['normdata'][i]['y'][j])
+                tmp = fourier.fourier_M(self.data.data[key][datakey][i]['y'][j])
+                print(self.data.data[key][datakey][i]['y'][j])
+                print(tmp)
                 for k in range(len(tmp)):
                     try:
                         ans[j][k] = ans[j][k] + coe*tmp[k]
@@ -99,8 +106,9 @@ class Averaging:
             for j in range(len(x)):
                 try:
                     tmp = tmp + x[j][i]
+                    # tmp = tmp + x[i][j]
                 except IndexError:
-                    print("DEBUG INDEXERROR"+str(i)+","+str(j)+","+str(len(x)))
+                    print("DEBUG INDEXERROR:"+str(i)+","+str(j)+","+str(len(x))+","+str(x))
             ans.append(tmp/len(x))
         return ans
 
