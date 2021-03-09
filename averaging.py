@@ -1,5 +1,6 @@
 from dataquery import *
 from fourier import *
+from spline import *
 # 仕様
 # 'key':{'yomi':str,'kakusu':int,'x':list,'y':list,'min_x':list,'min_y':list,'max_x':list,'max_y':list}
 
@@ -46,14 +47,14 @@ class Averaging:
             ave.append(self.ave_list(tmp['kakusu'],self.max_min_list['max_x']))
             ave.append(self.ave_list(tmp['kakusu'],self.max_min_list['max_y']))
             # keyの文字データを作成
-            self._moji[key] = {'yomi':tmp['yomi'],'kakusu':tmp['kakusu'],'x':self.x_average(key),'y':self.y_average(key),'min_x':ave[0],'min_y':ave[1],'max_x':ave[2],'max_y':ave[3]}
+            self._moji[key] = {'yomi':tmp['yomi'],'kakusu':tmp['kakusu'],'x':self.x_average_sp(key),'y':self.y_average_sp(key),'min_x':ave[0],'min_y':ave[1],'max_x':ave[2],'max_y':ave[3]}
             self.var_init() # 初期化
         # 保存
         #print("DEBUG moji = "+str(self._moji))
         self._moji_file.data = self._moji
         self._moji_file.save_to_json()
 
-    # xとyの平均化関数
+    # 文字key の xとyの平均化関数(全画)
     def x_average(self,key:str) -> list:
         fourier = cosFourier()
         datakey = 'normdata'
@@ -83,6 +84,40 @@ class Averaging:
                 tmp = fourier.fourier_M(self.data.data[key][datakey][i]['y'][j])
                 print(self.data.data[key][datakey][i]['y'][j])
                 print(tmp)
+                for k in range(len(tmp)):
+                    try:
+                        ans[j][k] = ans[j][k] + coe*tmp[k]
+                    except IndexError:
+                        print(str(len(ans))+","+str(len(ans[j]))+","+str(j)+","+str(k))
+        return ans
+
+    def x_average_sp(self,key:str) -> list:
+        spline = Spline()
+        datakey = 'normdata'
+        #datakey = 'data'
+        ans = [[0]*spline.num for i in range(self.data.data[key]['kakusu'])]
+        coe = 1/len(self.data.data[key][datakey])
+        print(key + " x coe:"+str(coe))
+        for i in range(len(self.data.data[key][datakey])):
+            for j in range(self.data.data[key]['kakusu']):
+                tmp = spline.spline(self.data.data[key][datakey][i]['x'][j])
+                for k in range(len(tmp)):
+                    try:
+                        ans[j][k] = ans[j][k] + coe*tmp[k]
+                    except IndexError:
+                        print(str(len(ans))+","+str(len(ans[j]))+","+str(j)+","+str(k))
+        return ans
+
+    def y_average_sp(self,key:str) -> list:
+        spline = Spline()
+        datakey = 'normdata'
+        #datakey = 'data'
+        ans = [[0]*spline.num for i in range(self.data.data[key]['kakusu'])]
+        coe = 1/len(self.data.data[key][datakey])
+        print(key + " y coe:"+str(coe))
+        for i in range(len(self.data.data[key][datakey])):
+            for j in range(self.data.data[key]['kakusu']):
+                tmp = spline.spline(self.data.data[key][datakey][i]['y'][j])
                 for k in range(len(tmp)):
                     try:
                         ans[j][k] = ans[j][k] + coe*tmp[k]

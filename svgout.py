@@ -23,7 +23,8 @@ class A4_svgenerator:
         self._line_margin: int = int(self.pixel/6)
         self._mojidata: dict = dict()
         self._database: Database = Database()
-        self._database.get_json("../data/output.json")
+        self._database.get_json("data/moji.json")
+        self._mojidata = self.database.data
         self._text: str = ""
 
         self.svg.setFileName(self.title)
@@ -126,8 +127,11 @@ class A4_svgenerator:
         top_margin = line*(self.pixel+self.line_margin)+self.head_margin
         left_margin = row*self.pixel+self.left_margin
         for i in range(len(moji['x'])):
+            sax = (moji['max_x'][i] - moji['min_x'][i])*self.pixel
+            say = (moji['max_y'][i] - moji['min_y'][i])*self.pixel
             for j in range(len(moji['x'][i])-1):
                 # print(str(i) + " ," + str(j) + " ," + str(moji['x']) + " ," + str(moji['y']))
-                # painter.drawLine(moji['x'][i][j] * self.pixel, moji['y'][i][j] * self.pixel, moji['x'][i][j + 1] * self.pixel, moji['y'][i][j + 1] * self.pixel)
+                 #painter.drawLine(moji['x'][i][j] * self.pixel, moji['y'][i][j] * self.pixel, moji['x'][i][j + 1] * self.pixel, moji['y'][i][j + 1] * self.pixel)
                 # painter.drawLine(moji['x'][i][j],moji['y'][i][j], moji['x'][i][j + 1], moji['y'][i][j + 1])
-                painter.drawLine(left_margin+moji['x'][i][j],top_margin+moji['y'][i][j], left_margin+moji['x'][i][j + 1], top_margin+moji['y'][i][j + 1])
+                #painter.drawLine(left_margin+moji['x'][i][j],top_margin+moji['y'][i][j], left_margin+moji['x'][i][j + 1], top_margin+moji['y'][i][j + 1])
+                painter.drawLine(round(left_margin+moji['x'][i][j]*sax+moji['min_x'][i]*self.pixel),round(top_margin+moji['y'][i][j]*say+moji['min_y'][i]*self.pixel), round(left_margin+moji['x'][i][j + 1] *sax+moji['min_x'][i]* self.pixel), round(top_margin+moji['y'][i][j + 1]*say+moji['min_y'][i]* self.pixel))

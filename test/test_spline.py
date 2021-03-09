@@ -7,14 +7,14 @@ y =  [ [ 167, 162, 159, 154, 147, 143, 139, 137, 135, 132, 131, 129, 128, 126, 1
 
 plt.plot(x[0],y[0])
 
-time = 2*math.pi/len(x[0])
+time = 2*math.pi/(len(x[0])-1)
 tmp = list()
 for i in range(len(x[0])):
     tmp.append(i*time)
 fx = interpolate.interp1d(tmp, x,kind="cubic")
 fy = interpolate.interp1d(tmp, y,kind="cubic")
 
-time = 2*math.pi/500
+time = 2*math.pi/(500-1)
 sx = list()
 try:
     for i in range(500):
@@ -36,14 +36,14 @@ for i in range(len(x)):
     plt.plot(x[i],y[i])
 
 for i in range(len(x)):
-    time = 2*math.pi/len(x[i])
+    time = 2*math.pi/(len(x[i])-1)
     tmp = list()
     for j in range(len(x[i])):
         tmp.append(j*time)
     fx = interpolate.interp1d(tmp, x[i],kind="cubic")
     fy = interpolate.interp1d(tmp, y[i],kind="cubic")
 
-    time = 2*math.pi/500
+    time = 2*math.pi/(500-1)
     sx = list()
     try:
         for j in range(500):
@@ -56,6 +56,8 @@ for i in range(len(x)):
             sy.append(fy(j*time))
     except:
         print(j)
+    print("2pi"+str(2*math.pi))
+    print("j*time"+str(j*time))
     plt.plot(sx,sy)
 plt.show()
 

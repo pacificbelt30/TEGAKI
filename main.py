@@ -10,6 +10,8 @@ import os
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
+from svgout import *
+from svgViewer import SVGView,SVMainWindow
 # import sip
 
 
@@ -23,6 +25,7 @@ class ReportArea(QTextEdit):
         self.line_count = 0
         self.line_word_count = 0
         font = QFont("MS Gothic",10,QFont.Medium)
+        font.setFamily('Japanese')
         font.setPointSize(self.font_size)
         font_met = QFontMetrics(font)
         self.setFont(font)
@@ -97,6 +100,7 @@ class ReportArea(QTextEdit):
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
+        self.setAttribute(Qt.WA_InputMethodEnabled)
         self.row_limit_words = 30
         self.font_size = 15
         self.line_count = 0
@@ -104,8 +108,9 @@ class MainWindow(QMainWindow):
 
         # self.test = QCheckBox('test', self)
         self.textbox = ReportArea()
-        self.btn = QPushButton("BUTTON", self)
-        self.btn.clicked.connect(self.textbox.print_plaintext)
+        self.btn = QPushButton("SVGを出力(test.svg)", self)
+        #self.btn.clicked.connect(self.textbox.print_plaintext)
+        self.btn.clicked.connect(self.gen_svg)
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.btn)
@@ -166,6 +171,18 @@ class MainWindow(QMainWindow):
         print(s.split('\n'))
         print(self.get_line_count())
         print(self.get_line_word_count())
+
+    def gen_svg(self):
+        s = self.textbox.toPlainText()
+        a4 = A4_svgenerator()
+        a4._text = s
+        a4.gen()
+        #sv = SVMainWindow()
+        #sv.svg = QGraphicsSvgItem("test.svg")
+        #sv.scene.clear()
+        #sv.scene.addItem(sv.svg)
+        #sv.view.update()
+        #sv.show()
 
     def get_line_count(self):
         # count = 0

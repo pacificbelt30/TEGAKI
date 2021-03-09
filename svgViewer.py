@@ -36,9 +36,9 @@ class SVGView(QGraphicsView):
 
 
 #class MainWindow(QWidget):
-class MainWindow(QMainWindow):
+class SVMainWindow(QMainWindow):
     def __init__(self, parent=None, window=None):
-        super(MainWindow, self).__init__()
+        super(SVMainWindow, self).__init__()
         self.window_width = 1000
         self.window_height = 1000
         self.setGeometry(100,100,self.window_width,self.window_height)
@@ -97,6 +97,6 @@ class MainWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = MainWindow()
+    ex = SVMainWindow()
     ex.show()
     sys.exit(app.exec_())
