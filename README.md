@@ -6,6 +6,11 @@ environment:
     - pyside2 or pyqt5
     - json
     - matplotlib
+
+install package with pip to run this app:
+```bash
+pip install -r requirements.txt
+```
   
 If registry moji data:
 ```bash
@@ -15,6 +20,11 @@ python regmoji.py
 If write report:
 ```bash
 python main.py
+```
+
+If view svg files:
+```bash
+python svgViewer.py
 ```
 
 # TODO
