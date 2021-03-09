@@ -27,6 +27,7 @@ class Canvas(QWidget):
         # self.painter.setPen(QPen(Qt.black,2, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
         self.setGeometry(self.canvas_width, self.canvas_height, self.canvas_width, self.canvas_height)
         self.setFixedSize(self.canvas_width, self.canvas_height)
+        self.initUI()
 
     # property, setter define
     @property
@@ -78,6 +79,10 @@ class Canvas(QWidget):
     def is_press(self,press:bool):
         self._is_press = press
 
+    def initUI(self):
+        self.clear()
+        print("Canvas:initUI()")
+
     # 描く文字の画数をセット
     def setKakusu(self, num):
         self.kakusu = num
@@ -128,6 +133,9 @@ class Canvas(QWidget):
         painter.setPen(QPen(Qt.white, 2, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
         rect = QRect(0, 0, self.canvas_width, self.canvas_height)
         painter.fillRect(rect, Qt.white)
+        painter.setPen(QPen(Qt.gray, 2, Qt.DashLine, Qt.RoundCap, Qt.RoundJoin))
+        painter.drawLine(QPoint(self.canvas_width/2,0),QPoint(self.canvas_width/2,self.canvas_height))
+        painter.drawLine(QPoint(0,self.canvas_height/2),QPoint(self.canvas_width,self.canvas_height/2))
         self.update()
 
     def paintEvent(self, event):
@@ -150,14 +158,15 @@ class Canvas(QWidget):
         self.image = changeImage
 
 
-class MainWindow(QWidget):
+#class MainWindow(QWidget):
+class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.title = "文字登録"
         self.width = 800
         self.height = 800
-        #self.input = InputData("data/input.json")
-        self.input = InputData("data/num.json")
+        self.input = InputData("data/input.json")
+        #self.input = InputData("data/num.json")
         #self.text = ["あ", "い", "う", "え", "お"]
         #self.kakusu = [3, 2, 2, 2, 3]
         self.text = self.input.get_all_keydata('text')
@@ -185,7 +194,7 @@ class MainWindow(QWidget):
         self.layout = QVBoxLayout()
         self.btnlayout = QHBoxLayout()
         self.nokori_label.setText("残り:"+str(len(self.text)-self.count-1)+"文字")
-        self.order_label.setText(self.text[self.count]+"を書いてください ["+str(self.kakusu[self.count])+"画]")
+        self.order_label.setText("<font size='7'>「"+self.text[self.count]+"」</font>を書いてください ["+str(self.kakusu[self.count])+"画]")
         #self.order_label.setText(self.input.data[self.count]['text']+"を書いてください"+str(self.input.data[self.count]['kakusu'])+"画")
         self.kakusu_label.setText("現在 "+str(self.canvas.count)+"/"+str(self.kakusu[self.count]))
         self.canvas.setKakusu(self.kakusu[self.count])
@@ -193,10 +202,10 @@ class MainWindow(QWidget):
         self.canvas.moji_fin.connect(self.dis_paint)
         #self.canvas.oneline_fin.connect(self.update_label)
         self.canvas.oneline_fin.connect(self.label_update)
+        self.canvas.clear()
         self.nextbtn.clicked.connect(self.next_moji)
         self.skipbtn.clicked.connect(self.skip_moji)
         self.cancelbtn.clicked.connect(self.cancel_moji)
-        self.canvas.setStyleSheet("background-color:#444444")
         self.cancelbtn.setText("取り消し")
         self.nextbtn.setText("次へ")
         self.skipbtn.setText("スキップ")
@@ -208,9 +217,70 @@ class MainWindow(QWidget):
         self.layout.addWidget(self.kakusu_label)
         self.layout.addWidget(self.canvas)
         self.layout.addLayout(self.btnlayout)
-        self.setLayout(self.layout)
+        self.widget = QWidget()
+        self.widget.setLayout(self.layout)
+        self.setCentralWidget(self.widget)
+        #self.setLayout(self.layout)
         self.font_scale.setPixelSize(20)
         self.setFont(self.font_scale)
+        self.create_menu_bar()
+        self.update()
+
+    def create_menu_bar(self):
+        self.exgroup = QActionGroup(self)
+        self.exgroup.setExclusive(True)
+        self.menu = self.menuBar()
+        self.filemenu = self.menu.addMenu('&File')
+        #num = QAction(self.style().standardIcon(QStyle.SP_DialogOpenButton), '数字', self)
+        num = QAction( '数字', self)
+        hira = QAction( 'ひらがな', self)
+        kata = QAction( 'カタカナ', self)
+        alpha = QAction( 'アルファベット', self)
+        joyo = QAction( '常用漢字', self)
+        #openAct.setShortcut('Ctrl+O')
+        num.setCheckable(True)
+        hira.setCheckable(True)
+        kata.setCheckable(True)
+        alpha.setCheckable(True)
+        joyo.setCheckable(True)
+        num.triggered.connect(lambda: self.change_input_data(0))
+        hira.triggered.connect(lambda: self.change_input_data(1))
+        kata.triggered.connect(lambda: self.change_input_data(2))
+        alpha.triggered.connect(lambda: self.change_input_data(3))
+        joyo.triggered.connect(lambda: self.change_input_data(4))
+        self.filemenu.addAction(num)
+        self.filemenu.addAction(hira)
+        self.filemenu.addAction(kata)
+        self.filemenu.addAction(alpha)
+        self.filemenu.addAction(joyo)
+        num.setActionGroup(self.exgroup)
+        hira.setActionGroup(self.exgroup)
+        kata.setActionGroup(self.exgroup)
+        alpha.setActionGroup(self.exgroup)
+        joyo.setActionGroup(self.exgroup)
+
+    def change_input_data(self,num:int):
+        input_file_name = ""
+        if num == 0:
+            input_file_name = "data/num.json"
+        elif num == 1:
+            input_file_name = "data/input.json"
+        elif num == 2:
+            input_file_name = "data/input.json"
+        elif num == 3:
+            input_file_name = "data/input.json"
+        elif num == 4:
+            input_file_name = "data/input.json"
+        else:
+            input_file_name = "data/num.json"
+
+        self.input = InputData(input_file_name)
+        self.text = self.input.get_all_keydata('text')
+        self.kakusu = self.input.get_all_keydata('kakusu')
+        self.count = 0
+        self.canvas.clear()
+        self.label_update()
+        
 
     # 一文字全て書き終わったら
     @Slot()
@@ -240,11 +310,13 @@ class MainWindow(QWidget):
     def label_update(self):
         try:
             self.nokori_label.setText("残り:"+str(len(self.text)-self.count-1)+"文字")
-            self.order_label.setText(self.text[self.count]+"を書いてください ["+str(self.kakusu[self.count])+"画]")
+            #self.order_label.setText(self.text[self.count]+"を書いてください ["+str(self.kakusu[self.count])+"画]")
+            self.order_label.setText("<font size='7'>「"+self.text[self.count]+"」</font>を書いてください ["+str(self.kakusu[self.count])+"画]")
             #self.order_label.setText(self.input.data[self.count]['text']+"を書いてください"+str(self.input.data[self.count]['kakusu'])+"画")
             self.kakusu_label.setText("現在 " + str(self.canvas.count) + "/" + str(self.kakusu[self.count]))
         except IndexError:
-            self.order_label.setText(" "+"を書いてください"+str(0)+"画")
+            #self.order_label.setText(" "+"を書いてください"+str(0)+"画")
+            self.order_label.setText("<font size='7'>「 」</font>を書いてください ["+str(0)+"画]")
             #self.order_label.setText(self.input.data[self.count]['text']+"を書いてください"+str(self.input.data[self.count]['kakusu'])+"画")
             self.kakusu_label.setText("現在 " + str(0) + "/" + str(0))
             self.canvas.setEnabled(False)
@@ -304,7 +376,7 @@ class MainWindow(QWidget):
             #json.dump(tmp, f, indent=4)
         self.db.addData(self.text[self.count],self.canvas.xlist,self.canvas.ylist)
         #self.db.addData(self.input.data[self.count]['text'],self.canvas.xlist,self.canvas.ylist)
-        #self.db.normalize(self.text[self.count])
+        self.db.normalize(self.text[self.count])
         self.db.save_to_json()
         plt.show()
 

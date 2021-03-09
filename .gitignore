@@ -130,3 +130,5 @@ dmypy.json
 .idea/
 Joyo_Kanji.xlsx
 paintClass.py
+tags
+/.vim

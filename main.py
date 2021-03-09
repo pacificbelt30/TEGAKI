@@ -7,9 +7,11 @@
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
 import sys
 import os
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PySide2.QtCore import *
+from PySide2.QtGui import *
+from PySide2.QtWidgets import *
+from svgout import *
+from svgViewer import SVGView,SVMainWindow
 # import sip
 
 
@@ -22,7 +24,8 @@ class ReportArea(QTextEdit):
         self.font_size = 15
         self.line_count = 0
         self.line_word_count = 0
-        font = QFont()
+        font = QFont("MS Gothic",10,QFont.Medium)
+        font.setFamily('Japanese')
         font.setPointSize(self.font_size)
         font_met = QFontMetrics(font)
         self.setFont(font)
@@ -33,6 +36,7 @@ class ReportArea(QTextEdit):
         self.setFixedHeight(font_met.height()*self.row)
         self.setViewportMargins(font_met.width('x')*3, 0, 0, 0)
         # self.tmp = QTextBlock()
+        self.setFontUnderline(True)
 
     # DEBUG用
     def print_plaintext(self):
@@ -92,9 +96,11 @@ class ReportArea(QTextEdit):
             tmp = tmp[:]
 
 
-class MainWindow(QWidget):
+#class MainWindow(QWidget):
+class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
+        self.setAttribute(Qt.WA_InputMethodEnabled)
         self.row_limit_words = 30
         self.font_size = 15
         self.line_count = 0
@@ -102,15 +108,62 @@ class MainWindow(QWidget):
 
         # self.test = QCheckBox('test', self)
         self.textbox = ReportArea()
-        self.btn = QPushButton("BUTTON", self)
-        self.btn.clicked.connect(self.textbox.print_plaintext)
+        self.btn = QPushButton("SVGを出力(test.svg)", self)
+        #self.btn.clicked.connect(self.textbox.print_plaintext)
+        self.btn.clicked.connect(self.gen_svg)
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.btn)
         layout.addWidget(self.textbox)
+        self.widget = QWidget()
+        self.widget.setLayout(layout)
+        self.setCentralWidget(self.widget)
         self.setGeometry(300, 50, 650, 550)
         self.setFixedSize(650, 550) # サイズ変更不可能にした
         self.setWindowTitle('QCheckBox')
+        self.initUI()
+
+    def initUI(self):
+        self.create_menu_bar()
+        
+    def create_menu_bar(self):
+        self.menu = self.menuBar()
+        self.filemenu = self.menu.addMenu('&File')
+        openAct = QAction(self.style().standardIcon(QStyle.SP_DialogOpenButton), 'Open', self)
+        openAct.setShortcut('Ctrl+O')
+        openAct.triggered.connect(self.getOpenFileName)
+        saveAct = QAction(self.style().standardIcon(QStyle.SP_DialogOpenButton), 'Save', self)
+        saveAct.setShortcut('Ctrl+S')
+        saveAct.triggered.connect(self.getSaveFileName)
+        saveAsAct = QAction(self.style().standardIcon(QStyle.SP_DialogOpenButton), 'Save as', self)
+        saveAsAct.setShortcut('Ctrl+Shift+S')
+        saveAsAct.triggered.connect(self.getSaveAsFileName)
+        self.filemenu.addAction(openAct)
+        self.filemenu.addAction(saveAct)
+        self.filemenu.addAction(saveAsAct)
+
+    def getOpenFileName(self):
+        (fileName, selectedFilter) = QFileDialog.getOpenFileName(self,filter="PlainText Files (*.txt)")
+        if fileName == "":
+            print("cannot open: file name is empty")
+        print("open:"+fileName)
+        try:
+            with open(fileName, 'r') as f:
+                txt = f.read()
+        except:
+            print("FILEOPENERROR")
+        self.textbox.setPlainText(txt)
+        return fileName
+
+    def getSaveFileName(self):
+        (fileName, selectedFilter) = QFileDialog.getSaveFileName(self,filter="PlainText Files (*.txt)")
+        print("save:"+fileName)
+        return fileName
+
+    def getSaveAsFileName(self):
+        (fileName, selectedFilter) = QFileDialog.getSaveFileName(self,filter="PlainText Files (*.txt)")
+        print("save as:"+fileName)
+        return fileName
 
     def print_plaintext(self):
         print(self.textbox.toPlainText())
@@ -118,6 +171,18 @@ class MainWindow(QWidget):
         print(s.split('\n'))
         print(self.get_line_count())
         print(self.get_line_word_count())
+
+    def gen_svg(self):
+        s = self.textbox.toPlainText()
+        a4 = A4_svgenerator()
+        a4._text = s
+        a4.gen()
+        #sv = SVMainWindow()
+        #sv.svg = QGraphicsSvgItem("test.svg")
+        #sv.scene.clear()
+        #sv.scene.addItem(sv.svg)
+        #sv.view.update()
+        #sv.show()
 
     def get_line_count(self):
         # count = 0

@@ -25,7 +25,7 @@ class InputData:
     # 入力用のjsonデータを返す
     def get_json(self,filename:str) -> list:
         try:
-            with open(filename) as f:
+            with open(filename,encoding="utf-8") as f:
                 data = json.load(f)
                 self.length = len(data)
         except FileNotFoundError:
@@ -56,17 +56,17 @@ class InputData:
         return tmp
 
 # データベースとして使いたい予定
+# "i":{"id":,"yomi":,"kakusu":,"len":,"datanum":,"data":}
 class Database:
-    # "i":{"id":,"yomi":,"kakusu":,"len":,"datanum":,"data":}
     def __init__(self):
         self._data = dict() # データ フォーマット変えたいかもしれない
         self._file:str = "data/output.json" # データベースファイル名
     @property
     def data(self) -> dict:
         return self._data
-    #@data.setter
-    #def data(self,data:dict):
-        #self._data = data
+    @data.setter
+    def data(self,data:dict):
+        self._data = data
     @property
     def file(self) -> str:
         return self._file
@@ -91,7 +91,9 @@ class Database:
             print("画数が…")
             return False
         #self.data[key]['data'].append({'x':x,'y':y,'min_x'})
-        self.data[key]['data'].append({"data": {"x": x, "y": y, "min_x":self.minlist(x),"min_y":self.minlist(y), "max_x":self.maxlist(x), "max_y":self.maxlist(y)}})
+        #self.data[key]['data'].append({"data": {"x": x, "y": y, "min_x":self.minlist(x),"min_y":self.minlist(y), "max_x":self.maxlist(x), "max_y":self.maxlist(y)}})
+        #self.data[key]['data'].append({"x": x, "y": y, "min_x":self.minlist(x),"min_y":self.minlist(y), "max_x":self.maxlist(x), "max_y":self.maxlist(y)})
+        self.data[key]['data'].append({"x": x, "y": y, "min_x":self.minlist(x,600),"min_y":self.minlist(y,600), "max_x":self.maxlist(x,600), "max_y":self.maxlist(y,600)})
         self.data[key]['datanum'] = self.data[key]['datanum'] + 1
         return True
 
@@ -102,10 +104,10 @@ class Database:
         except KeyError:
             print("削除失敗")
 
-    # 正規化したい 現在うまく行ってない
+    # 正規化したい 
     def normalize(self,key:str):
-        tmp = self.data[key]['data']
-        tmp2 = dict()
+        tmp = self.data[key]['data'] # 
+        tmp2 = dict() # 保存するデータ
         tmp2['normdata'] = list()
         for i in range(len(tmp)):
             tmp2['normdata'].append({'x':list(),'y':list()})
@@ -116,10 +118,19 @@ class Database:
                 maxy = max(tmp[i]['y'][j])
                 minx = min(tmp[i]['x'][j])
                 miny = min(tmp[i]['y'][j])
+                # 完全にx軸ory軸に平行な直線の場合，0割発生の可能性がある
+                # 0割例外のときはすべて1になる
                 for k in tmp[i]['x'][j]:
-                    tmp2['normdata'][i]['x'][j].append((k-minx)/(maxx-minx))
+                    try:
+                        tmp2['normdata'][i]['x'][j].append((k-minx)/(maxx-minx))
+                    except ZeroDivisionError:
+                        tmp2['normdata'][i]['x'][j].append(1)
                 for k in tmp[i]['y'][j]:
-                    tmp2['normdata'][i]['y'][j].append((k-miny)/(maxy-miny))
+                    try:
+                        tmp2['normdata'][i]['y'][j].append((k-miny)/(maxy-miny))
+                    except ZeroDivisionError:
+                        tmp2['normdata'][i]['y'][j].append(1)
+
         self.data[key]['normdata'] = tmp2['normdata']
         print(self.data)
 
@@ -127,25 +138,28 @@ class Database:
     def get_json(self,filename:str) -> dict:
         self.file = filename
         try:
-            with open(filename) as f:
+            with open(filename,encoding="utf-8") as f:
                 self._data = json.load(f)
         except FileNotFoundError:
             print(filename+' is not found.')
-            return ''
+            return dict()
+        except json.decoder.JSONDecodeError:
+            print("json is gomi")
+            return dict()
         return self.data
 
     # listの中の最小値 正規化したデータを戻すときに使うかもしれない
-    def minlist(self,x:list) -> list:
+    def minlist(self,x:list,pixel:int) -> list:
         ans = list()
         for i in x:
-            ans.append(min(i))
+            ans.append(min(i)/pixel)
         return ans
 
     # listの中の最大値 正規化したデータを戻すときに使うかもしれない
-    def maxlist(self,x:list) -> list:
+    def maxlist(self,x:list,pixel:int) -> list:
         ans = list()
         for i in x:
-            ans.append(max(i))
+            ans.append(max(i)/pixel)
         return ans
 
     # 現在のself.dataをjsonとしてself.fileに保存
@@ -153,16 +167,14 @@ class Database:
         if self.file == "":
             print("filename was not setting")
             return False
-        with open(self.file, 'w') as f:
+        with open(self.file, 'w',encoding="utf-8") as f:
             # with open('test.json', 'w') as f:
-            json.dump(self.data, f, indent=2)
+            json.dump(self.data, f,indent=2, ensure_ascii=False)
  
-
-
-
-
+    # データの検証 だめな場合は排除？
+    def validation(self):
+        return True
 
 # t軸0~2piに正規化
 # x,y軸0 ~ 1に正規化
-
 
