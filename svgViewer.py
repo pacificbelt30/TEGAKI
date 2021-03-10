@@ -10,6 +10,9 @@ class SVGView(QGraphicsView):
         super(SVGView, self).__init__()
         self.ratio = 1.0
         self.count = 10
+        self.is_press:bool = False
+        self.pos = QPointF()
+        self.lastpos = 0
         self.upperlimit = 30
         self.lowerlimit = 1
 
@@ -34,6 +37,39 @@ class SVGView(QGraphicsView):
             self.ratio = ratio*(self.count+1)/10
         print("now ratio :" + str(self.ratio))
 
+    def mousePressEvent(self, event):
+        self.is_press = True
+        self.lastpos = event.pos()
+        print("mousePressEvent")
+
+    def mouseReleaseEvent(self, event):
+        if event.button() == Qt.LeftButton and self.is_press:
+            self.is_press = False
+            # self.pos.setX(self.pos.x() - (event.pos().x()-self.lastpos.x())/self.ratio)
+            # self.pos.setY(self.pos.y() - (event.pos().y()-self.lastpos.y())/self.ratio)
+            self.pos.setX(self.pos.x() - (event.pos().x()-self.lastpos.x()))
+            self.pos.setY(self.pos.y() - (event.pos().y()-self.lastpos.y()))
+            if self.pos.x() < 0:self.pos.setX(0)
+            if self.pos.y() < 0:self.pos.setY(0)
+            if self.pos.x() > self.sceneRect().width():self.pos.setX(self.sceneRect().width())
+            if self.pos.y() > self.sceneRect().height():self.pos.setY(self.sceneRect().height())
+
+            self.centerOn(self.pos)
+            print("mouseReleaseEvent")
+            print(self.pos)
+
+    def mouseMoveEvent(self, event):
+        if event.buttons() == Qt.LeftButton and self.is_press:
+            # self.pos.setX(self.pos.x() - (event.pos().x()-self.lastpos.x())/self.ratio)
+            # self.pos.setY(self.pos.y() - (event.pos().y()-self.lastpos.y())/self.ratio)
+            self.pos.setX(self.pos.x() - (event.pos().x()-self.lastpos.x()))
+            self.pos.setY(self.pos.y() - (event.pos().y()-self.lastpos.y()))
+            if self.pos.x() < 0:self.pos.setX(0)
+            if self.pos.y() < 0:self.pos.setY(0)
+            if self.pos.x() > self.sceneRect().width():self.pos.setX(self.sceneRect().width())
+            if self.pos.y() > self.sceneRect().height():self.pos.setY(self.sceneRect().height())
+            self.centerOn(self.pos)
+            print("mouseMoveEvent2")
 
 #class MainWindow(QWidget):
 class SVMainWindow(QMainWindow):
