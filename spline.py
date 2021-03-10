@@ -24,7 +24,10 @@ class Spline:
             tmp.append(i*time1)
         fx = interpolate.interp1d(tmp,x,kind="cubic")
         for i in range(self.num):
-            ans[i] = fx(i*time2)
+            try:
+                ans[i] = fx(i*time2)
+            except:
+                ans[i] = fx(self.period-time2)  # 丸め誤差の問題？で例外が出るので緊急手段
         return ans
 
 

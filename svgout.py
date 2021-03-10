@@ -23,7 +23,7 @@ class A4_svgenerator:
         self._line_margin: int = int(self.pixel/6)
         self._mojidata: dict = dict()
         self._database: Database = Database()
-        self._database.get_json("data/moji.json")
+        self._database.get_json("data/output/moji.json")
         self._mojidata = self.database.data
         self._text: str = ""
 
@@ -113,7 +113,7 @@ class A4_svgenerator:
                     break
                 try:
                     self.draw_moji(self.mojidata[self.text[count]],painter,i,j)
-                    print(self.mojidata[self.text[j]])
+                    print(self.mojidata[self.text[count]])
                 except KeyError:
                     import traceback
                     traceback.print_exc()

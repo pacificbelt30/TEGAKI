@@ -60,7 +60,7 @@ class InputData:
 class Database:
     def __init__(self):
         self._data = dict() # データ フォーマット変えたいかもしれない
-        self._file:str = "data/output.json" # データベースファイル名
+        self._file:str = "data/output/output.json" # データベースファイル名
     @property
     def data(self) -> dict:
         return self._data

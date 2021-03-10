@@ -165,7 +165,7 @@ class MainWindow(QMainWindow):
         self.title = "文字登録"
         self.width = 800
         self.height = 800
-        self.input = InputData("data/input.json")
+        self.input = InputData("data/input/num.json")
         #self.input = InputData("data/num.json")
         #self.text = ["あ", "い", "う", "え", "お"]
         #self.kakusu = [3, 2, 2, 2, 3]
@@ -174,7 +174,7 @@ class MainWindow(QMainWindow):
         self.count = 0
         self.font_scale = QFont()
         self.db = Database()
-        self.db.get_json("data/output.json")
+        self.db.get_json("data/output/output.json")
         self.initUI()
 
     def initUI(self):
@@ -258,27 +258,32 @@ class MainWindow(QMainWindow):
         kata.setActionGroup(self.exgroup)
         alpha.setActionGroup(self.exgroup)
         joyo.setActionGroup(self.exgroup)
+        hira.setChecked(True)
+        self.change_input_data(1)
 
     def change_input_data(self,num:int):
         input_file_name = ""
         if num == 0:
-            input_file_name = "data/num.json"
+            input_file_name = "data/input/num.json"
         elif num == 1:
-            input_file_name = "data/input.json"
+            input_file_name = "data/input/hira.json"
         elif num == 2:
-            input_file_name = "data/input.json"
+            input_file_name = "data/input/kata.json"
         elif num == 3:
-            input_file_name = "data/input.json"
+            input_file_name = "data/input/num.json"
         elif num == 4:
-            input_file_name = "data/input.json"
+            input_file_name = "data/input/kanji.json"
         else:
-            input_file_name = "data/num.json"
+            input_file_name = "data/input/num.json"
 
         self.input = InputData(input_file_name)
         self.text = self.input.get_all_keydata('text')
         self.kakusu = self.input.get_all_keydata('kakusu')
-        self.count = 0
+        for i in range(len(self.kakusu)):
+            self.kakusu[i] = int(self.kakusu[i])
         self.canvas.clear()
+        self.canvas._kakusu = self.kakusu
+        self.count = 0
         self.label_update()
         
 
@@ -337,6 +342,7 @@ class MainWindow(QMainWindow):
     def next_moji(self) -> bool:
         if self.kakusu[self.count] != self.canvas.count:
             QMessageBox.information(None,'error','規定画数に達していません',QMessageBox.Ok)
+            print(str(self.kakusu[self.count])+","+str(self.canvas.count)+str(type(self.kakusu[self.count]))+str(type(self.canvas.count)))
             return False
         self.save_data()
         self.canvas.clear()
