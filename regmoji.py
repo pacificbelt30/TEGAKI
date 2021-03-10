@@ -237,27 +237,32 @@ class MainWindow(QMainWindow):
         kata = QAction( 'カタカナ', self)
         alpha = QAction( 'アルファベット', self)
         joyo = QAction( '常用漢字', self)
+        kigo = QAction( '記号', self)
         #openAct.setShortcut('Ctrl+O')
         num.setCheckable(True)
         hira.setCheckable(True)
         kata.setCheckable(True)
         alpha.setCheckable(True)
         joyo.setCheckable(True)
+        kigo.setCheckable(True)
         num.triggered.connect(lambda: self.change_input_data(0))
         hira.triggered.connect(lambda: self.change_input_data(1))
         kata.triggered.connect(lambda: self.change_input_data(2))
         alpha.triggered.connect(lambda: self.change_input_data(3))
         joyo.triggered.connect(lambda: self.change_input_data(4))
+        kigo.triggered.connect(lambda: self.change_input_data(5))
         self.filemenu.addAction(num)
         self.filemenu.addAction(hira)
         self.filemenu.addAction(kata)
         self.filemenu.addAction(alpha)
         self.filemenu.addAction(joyo)
+        self.filemenu.addAction(kigo)
         num.setActionGroup(self.exgroup)
         hira.setActionGroup(self.exgroup)
         kata.setActionGroup(self.exgroup)
         alpha.setActionGroup(self.exgroup)
         joyo.setActionGroup(self.exgroup)
+        kigo.setActionGroup(self.exgroup)
         hira.setChecked(True)
         self.change_input_data(1)
 
@@ -273,6 +278,8 @@ class MainWindow(QMainWindow):
             input_file_name = "data/input/num.json"
         elif num == 4:
             input_file_name = "data/input/kanji.json"
+        elif num == 5:
+            input_file_name = "data/input/kigou.json"
         else:
             input_file_name = "data/input/num.json"
 
