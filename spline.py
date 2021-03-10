@@ -27,7 +27,9 @@ class Spline:
             try:
                 ans[i] = fx(i*time2)
             except:
-                ans[i] = fx(self.period-time2)  # 丸め誤差の問題？で例外が出るので緊急手段
+                print("DEBUG:"+str(i*time2)+","+str(tmp[len(tmp)-1]))
+                print("DEBUG:"+str(i*time2>tmp[len(tmp)-1]))
+                ans[i] = fx(tmp[len(tmp)-1])  # 丸め誤差の問題？で例外が出るので緊急手段
         return ans
 
 
