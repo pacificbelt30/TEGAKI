@@ -177,12 +177,13 @@ class MainWindow(QMainWindow):
         a4 = A4_svgenerator()
         a4._text = s
         a4.gen()
-        #sv = SVMainWindow()
-        #sv.svg = QGraphicsSvgItem("test.svg")
-        #sv.scene.clear()
-        #sv.scene.addItem(sv.svg)
-        #sv.view.update()
-        #sv.show()
+        self.sv = SVMainWindow()
+        self.sv.svg = QGraphicsSvgItem("test.svg")
+        self.sv.scene.clear()
+        self.sv.scene.addItem(self.sv.svg)
+        self.sv.view.update()
+        self.sv.show()
+        # self.hide()
 
     def get_line_count(self):
         # count = 0
