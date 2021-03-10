@@ -126,6 +126,7 @@ class Canvas(QWidget):
 
     # x,y座標，画数，描画エリアすべてリセット
     def clear(self):
+        print(self.image.isNull())
         self.xlist = list()
         self.ylist = list()
         self.count = 0
@@ -180,8 +181,9 @@ class MainWindow(QMainWindow):
     def initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(0, 0, self.width, self.height)
-        self.show()
         self.setWindowLayout()
+        self.show()
+        self.canvas.clear()
 
     def setWindowLayout(self):
         self.order_label = QLabel()
@@ -202,7 +204,7 @@ class MainWindow(QMainWindow):
         self.canvas.moji_fin.connect(self.dis_paint)
         #self.canvas.oneline_fin.connect(self.update_label)
         self.canvas.oneline_fin.connect(self.label_update)
-        self.canvas.clear()
+        #self.canvas.clear()
         self.nextbtn.clicked.connect(self.next_moji)
         self.skipbtn.clicked.connect(self.skip_moji)
         self.cancelbtn.clicked.connect(self.cancel_moji)

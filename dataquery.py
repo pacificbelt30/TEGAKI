@@ -5,7 +5,7 @@ import json
 # [{"id":,"text":,"kakusu":},]
 class InputData:
     def __init__(self,filename):
-        print('initialize dataQuery')
+        print('initialize InputData')
         self._data:list = self.get_json(filename) # 入力json
         self._length:int = 0 # 一応長さ いらない
     
