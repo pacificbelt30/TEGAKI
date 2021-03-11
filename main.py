@@ -182,10 +182,8 @@ class MainWindow(QMainWindow):
             QMessageBox.information(None, 'error', '何も入力されていない', QMessageBox.Ok)
             return -1
         self.sv = SVMainWindow()
-        self.sv.svg = QGraphicsSvgItem("test.svg")
-        self.sv.scene.clear()
-        self.sv.scene.addItem(self.sv.svg)
-        self.sv.view.update()
+        for i in range(a4.page):
+            self.sv.OpenSvgFile(a4.title+"_"+str(i+1)+".svg")
         self.sv.show()
         # self.hide()
 

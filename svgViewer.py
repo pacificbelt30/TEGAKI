@@ -128,28 +128,33 @@ class SVMainWindow(QMainWindow):
 
     def getOpenFileName(self)->str:
         (fileName, selectedFilter) = QFileDialog.getOpenFileName(self,filter="Image Files (*.svg)")
+        self.OpenSvgFile(fileName)
+        return fileName
+
+    def OpenSvgFile(self,fileName:str):
         if fileName == "":
             print("cannot open: file name is empty")
             return ""
         self.view.append(SVGView())
-        self.svg.append(QGraphicsSvgItem())
+        self.svg.append(QGraphicsSvgItem(fileName))
         self.scene.append(QGraphicsScene())
+
+        if self.svg[len(self.svg)-1].boundingRect().width() == -1 or self.svg[len(self.svg)-1].boundingRect().height() == -1:
+            QMessageBox.information(None, 'error', '有効なsvgファイルではありません', QMessageBox.Ok)
+            self.svg.pop(len(self.svg)-1)
+            return ""
 
         index = self.tab.addTab(self.view[self.tab.count()],fileName)
         self.fill_background(index)
-        self.svg[index] = QGraphicsSvgItem(fileName)
-        if self.svg[index].boundingRect().width() == -1 or self.svg[index].boundingRect().height() == -1:
-            QMessageBox.information(None, 'error', '有効なsvgファイルではありません', QMessageBox.Ok)
-            return ""
-
         self.scene[index].setSceneRect(0,0,self.svg[index].sceneBoundingRect().width(),self.svg[index].sceneBoundingRect().height())
         self.scene[index].clear()
         self.view[index].initScale()
         self.scene[index].addItem(self.svg[index])
         self.view[index].setScene(self.scene[index])
         self.view[index].update()
+        self.tab.setCurrentIndex(index)
         print("open:"+fileName)
-        return fileName
+
 
     def fill_background(self,index:int):
         self.view[index].setBackgroundBrush(Qt.gray)

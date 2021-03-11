@@ -13,7 +13,8 @@ import os
 class A4_svgenerator:
     def __init__(self):
         self._svg: QSvgGenerator = QSvgGenerator()
-        self._title: str = "test.svg"
+        #self._title: str = "test.svg"
+        self._title: str = "test"
         self._row: int = 30  # 行
         self._column: int = 30  # 列
         self._pixel: int = 600  # 一文字分のピクセル

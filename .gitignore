@@ -133,5 +133,7 @@ paintClass.py
 tags
 /.vim
 test.svg
+test_1.svg
+test_2.svg
 /test/test.svg
 /test/svg.svg
