@@ -33,7 +33,7 @@ class ReportArea(QTextEdit):
         self.setWordWrapMode(QTextOption.WrapAnywhere)
         # self.setLineWrapMode(3)  # 文字数での折返し 3
         self.setLineWrapColumnOrWidth(self.column)
-        self.setFixedHeight(font_met.height()*self.row)
+        # self.setFixedHeight(font_met.height()*self.row)
         self.setViewportMargins(font_met.width('x')*3, 0, 0, 0)
         # self.tmp = QTextBlock()
         self.setFontUnderline(True)
@@ -111,15 +111,17 @@ class MainWindow(QMainWindow):
         self.btn = QPushButton("SVGを出力(test.svg)", self)
         #self.btn.clicked.connect(self.textbox.print_plaintext)
         self.btn.clicked.connect(self.gen_svg)
+        self.label = QLabel("一行の文字数:"+str(self.textbox.column)+"\n"+"1ページの行数"+str(self.textbox.row))
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.btn)
+        layout.addWidget(self.label)
         layout.addWidget(self.textbox)
         self.widget = QWidget()
         self.widget.setLayout(layout)
         self.setCentralWidget(self.widget)
-        self.setGeometry(300, 50, 650, 550)
-        self.setFixedSize(650, 700) # サイズ変更不可能にした
+        self.setGeometry(300, 50, 650, 750)
+        # self.setFixedSize(650, 700) # サイズ変更不可能にした
         self.setWindowTitle('QCheckBox')
         self.initUI()
 
@@ -175,8 +177,10 @@ class MainWindow(QMainWindow):
     def gen_svg(self):
         s = self.textbox.toPlainText()
         a4 = A4_svgenerator()
-        a4._text = s
-        a4.gen()
+        a4.text = s
+        if not a4.gen():
+            QMessageBox.information(None, 'error', '何も入力されていない', QMessageBox.Ok)
+            return -1
         self.sv = SVMainWindow()
         self.sv.svg = QGraphicsSvgItem("test.svg")
         self.sv.scene.clear()

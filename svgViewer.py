@@ -9,11 +9,11 @@ class SVGView(QGraphicsView):
     def __init__(self):
         super(SVGView, self).__init__()
         self.ratio = 1.0
-        self.count = 10
+        self.count = 20
         self.is_press:bool = False
         self.pos = QPointF()
         self.lastpos = 0
-        self.upperlimit = 30
+        self.upperlimit = 100
         self.lowerlimit = 1
 
     def wheelEvent(self, event:QWheelEvent):
@@ -72,6 +72,11 @@ class SVGView(QGraphicsView):
             self.centerOn(self.pos)
             print("mouseMoveEvent2")
 
+    def initScale(self):
+        self.scale(1.0/self.ratio,1.0/self.ratio)
+        self.count = 20
+        self.ratio = 1.0
+
 #class MainWindow(QWidget):
 class SVMainWindow(QMainWindow):
     def __init__(self, parent=None, window=None):
@@ -81,22 +86,27 @@ class SVMainWindow(QMainWindow):
         self.setGeometry(100,100,self.window_width,self.window_height)
         #self.setFixedSize(self.window_width,self.window_height)
         # self.view = QGraphicsView()
-        self.view = SVGView()
-        self.scene = QGraphicsScene()
+        # self.view = SVGView()
+        # self.scene = QGraphicsScene()
+        # self.svg = QGraphicsSvgItem("test/svg.svg")
+        self.view:list = list()
+        self.scene:list = list()
+        self.svg:list = list()
         self.rect = QRect(0,0,500,500)
-        # self.svg = QGraphicsSvgItem("test.svg")
-        self.svg = QGraphicsSvgItem("test/svg.svg")
         self.image = QImage("test/test.png")
         self.pix = QGraphicsPixmapItem(QPixmap.fromImage(self.image))
         # self.scene.setSceneRect(rect)
-        self.fill_background()
+        # self.fill_background(0)
         #self.scene.addItem(self.svg)
         # self.scene.addItem(self.pix)
         # self.scene.addRect(rect,QPen(Qt.transparent),QBrush(Qt.yellow))
-        # self.view.scale(0.2,0.2)  # scaling
-        self.view.setScene(self.scene)
+        self.tab = QTabWidget()
+        self.tab.setTabsClosable(True)
+        self.tab.tabCloseRequested.connect(lambda index:self.tab.removeTab(index))
+        # self.view[0].setScene(self.scene[0])
         self.layout = QVBoxLayout()
-        self.layout.addWidget(self.view)
+        self.layout.addWidget(self.tab)
+        # self.layout.addWidget(self.view)
         self.initUI()
 
         self.widget = QWidget() # QMainWindowの場合
@@ -121,15 +131,28 @@ class SVMainWindow(QMainWindow):
         if fileName == "":
             print("cannot open: file name is empty")
             return ""
-        self.svg = QGraphicsSvgItem(fileName)
-        self.scene.clear()
-        self.scene.addItem(self.svg)
-        self.view.update()
+        self.view.append(SVGView())
+        self.svg.append(QGraphicsSvgItem())
+        self.scene.append(QGraphicsScene())
+
+        index = self.tab.addTab(self.view[self.tab.count()],fileName)
+        self.fill_background(index)
+        self.svg[index] = QGraphicsSvgItem(fileName)
+        if self.svg[index].boundingRect().width() == -1 or self.svg[index].boundingRect().height() == -1:
+            QMessageBox.information(None, 'error', '有効なsvgファイルではありません', QMessageBox.Ok)
+            return ""
+
+        self.scene[index].setSceneRect(0,0,self.svg[index].sceneBoundingRect().width(),self.svg[index].sceneBoundingRect().height())
+        self.scene[index].clear()
+        self.view[index].initScale()
+        self.scene[index].addItem(self.svg[index])
+        self.view[index].setScene(self.scene[index])
+        self.view[index].update()
         print("open:"+fileName)
         return fileName
 
-    def fill_background(self):
-        self.view.setBackgroundBrush(Qt.gray)
+    def fill_background(self,index:int):
+        self.view[index].setBackgroundBrush(Qt.gray)
         # self.scene.setBackgroundBrush(Qt.gray)
 
 if __name__ == '__main__':

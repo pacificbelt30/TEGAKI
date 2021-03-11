@@ -103,10 +103,13 @@ class A4_svgenerator:
     def page(self,page:int):
         self._page = page
 
-    def gen(self):
+    def gen(self) -> bool:
+        self.text = self.trans_han_to_zen(self.text)
         self.page = 0
         fin: int = len(self.text)
         count:int = 0
+        if self.text.replace('\n','') == "":
+            return False
         while True:
             if count == fin: break
             self.page = self.page + 1
@@ -144,8 +147,8 @@ class A4_svgenerator:
                     j = j + 1
                     count = count + 1
             painter.end()
-        painter.end()
         print("DEBUG:count"+str(count))
+        return True
 
     def draw_moji(self,moji:list,painter:QPainter,line:int,row:int):
         top_margin = line*(self.pixel+self.line_margin)+self.head_margin
@@ -172,3 +175,6 @@ class A4_svgenerator:
         # self.svg.setViewBox(QRect(0, 0,500,500))
         self.svg.setTitle(file)
         self.svg.setDescription("from pySide2 QtSvg.")
+
+    def trans_han_to_zen(self,text:str):
+        return text.translate(str.maketrans({chr(0xFF01 + i): chr(0x21 + i) for i in range(94)}))
