@@ -105,6 +105,7 @@ class MainWindow(QMainWindow):
         self.font_size = 15
         self.line_count = 0
         self.line_word_count = [0]
+        self.file = ""
 
         # self.test = QCheckBox('test', self)
         self.textbox = ReportArea()
@@ -140,12 +141,17 @@ class MainWindow(QMainWindow):
         saveAsAct = QAction(self.style().standardIcon(QStyle.SP_DialogOpenButton), 'Save as', self)
         saveAsAct.setShortcut('Ctrl+Shift+S')
         saveAsAct.triggered.connect(self.getSaveAsFileName)
+        exportAct = QAction(self.style().standardIcon(QStyle.SP_DialogOpenButton), 'export', self)
+        exportAct.setShortcut('Ctrl+E')
+        exportAct.triggered.connect(self.getExportFileName)
         self.filemenu.addAction(openAct)
         self.filemenu.addAction(saveAct)
         self.filemenu.addAction(saveAsAct)
+        self.filemenu.addAction(exportAct)
 
     def getOpenFileName(self):
         (fileName, selectedFilter) = QFileDialog.getOpenFileName(self,filter="PlainText Files (*.txt)")
+        txt = ""
         if fileName == "":
             print("cannot open: file name is empty")
         print("open:"+fileName)
@@ -155,16 +161,39 @@ class MainWindow(QMainWindow):
         except:
             print("FILEOPENERROR")
         self.textbox.setPlainText(txt)
+        self.file = fileName
         return fileName
 
     def getSaveFileName(self):
+        if self.file != "":
+            with open(self.file, 'w') as f:
+                f.write(self.textbox.toPlainText())
+            return self.file
         (fileName, selectedFilter) = QFileDialog.getSaveFileName(self,filter="PlainText Files (*.txt)")
         print("save:"+fileName)
+        with open(fileName, 'w') as f:
+            f.write(self.textbox.toPlainText())
+        self.file = fileName
         return fileName
 
     def getSaveAsFileName(self):
         (fileName, selectedFilter) = QFileDialog.getSaveFileName(self,filter="PlainText Files (*.txt)")
         print("save as:"+fileName)
+        with open(fileName, 'w') as f:
+            f.write(self.textbox.toPlainText())
+        self.file = fileName
+        return fileName
+
+    def getExportFileName(self):
+        (fileName, selectedFilter) = QFileDialog.getSaveFileName(self,filter="PlainText Files (*.*)")
+        print("save as:"+fileName)
+        s = self.textbox.toPlainText()
+        a4 = A4_svgenerator()
+        a4._title = fileName
+        a4.text = s
+        if not a4.gen():
+            QMessageBox.information(None, 'error', '何も入力されていない', QMessageBox.Ok)
+            return -1
         return fileName
 
     def print_plaintext(self):
