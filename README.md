@@ -43,12 +43,13 @@ python svgViewer.py
 - linuxでpythonエディタを用意する ○ nvimとcocで良し
 - validationをしておく，出力のチェックも
 - 誤差を加える(オリジナリティ)
-- マスに十字線 △ 部分的にそう
+- マスに十字線 ○
 - ワープロに罫線
 - 実際のデータを使ったフーリエテスト
 - jsonの改行 ○ めんどくさい
 - 複数ページ
-- svgViewer
+- svgViewer ○
+- 半角に対応したい
 
 # 問題点
 - cssが適用されない

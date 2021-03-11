@@ -53,6 +53,7 @@ class SVGView(QGraphicsView):
             if self.pos.y() < 0:self.pos.setY(0)
             if self.pos.x() > self.sceneRect().width():self.pos.setX(self.sceneRect().width())
             if self.pos.y() > self.sceneRect().height():self.pos.setY(self.sceneRect().height())
+            print(self.horizontalScrollBar().setValue(10))
 
             self.centerOn(self.pos)
             print("mouseReleaseEvent")

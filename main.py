@@ -119,7 +119,7 @@ class MainWindow(QMainWindow):
         self.widget.setLayout(layout)
         self.setCentralWidget(self.widget)
         self.setGeometry(300, 50, 650, 550)
-        self.setFixedSize(650, 550) # サイズ変更不可能にした
+        self.setFixedSize(650, 700) # サイズ変更不可能にした
         self.setWindowTitle('QCheckBox')
         self.initUI()
 
