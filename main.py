@@ -117,7 +117,7 @@ class ReportArea(QTextEdit):
             with open(fileName[0].toLocalFile(), 'r', encoding="UTF-8") as f:
                 txt = f.read()
         except:
-            print("FILEOPENERROR")
+            print("FILEOPENERROR" + str(fileName[0].toLocalfile()))
         self.setPlainText(txt)
         # self.file = fileName
         print(str(fileName)+":"+str(type(fileName)))
