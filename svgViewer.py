@@ -1,4 +1,5 @@
 import sys
+import os
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtSvg import *
@@ -15,6 +16,7 @@ class SVGView(QGraphicsView):
         self.lastpos = 0
         self.upperlimit = 100
         self.lowerlimit = 1
+        # self.setAcceptDrops(True)
 
     def wheelEvent(self, event:QWheelEvent):
         if event.delta() >= 0:
@@ -77,6 +79,7 @@ class SVGView(QGraphicsView):
         self.count = 20
         self.ratio = 1.0
 
+
 #class MainWindow(QWidget):
 class SVMainWindow(QMainWindow):
     def __init__(self, parent=None, window=None):
@@ -113,7 +116,7 @@ class SVMainWindow(QMainWindow):
         #self.setLayout(self.layout)
         self.widget.setLayout(self.layout)
         self.setCentralWidget(self.widget)
-
+        self.setAcceptDrops(True)
 
     def initUI(self):
         self.create_menu_bar()
@@ -159,6 +162,27 @@ class SVMainWindow(QMainWindow):
     def fill_background(self,index:int):
         self.view[index].setBackgroundBrush(Qt.gray)
         # self.scene.setBackgroundBrush(Qt.gray)
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasUrls():
+            event.accept()
+        else:
+            event.ignore()
+
+    def dragMoveEvent(self, event):
+        if event.mimeData().hasUrls():
+            event.setDropAction(Qt.CopyAction)
+            event.accept()
+        else:
+            event.ignore()
+
+    def dropEvent(self, event):
+        fileName = event.mimeData().urls()
+        for i in range(len(fileName)):
+            self.OpenSvgFile(fileName[i].toLocalFile())
+            print(str(fileName[i].toLocalFile())+":"+str(type(fileName[i].toLocalFile())))
+        # self.text = fileName
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

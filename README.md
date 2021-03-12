@@ -50,8 +50,9 @@ python svgViewer.py
 - 複数ページ
 - svgViewer ○
 - 半角に対応したい
+- ドラッグ・アンド・ドロップ
 
 # 問題点
-- cssが適用されない
+- cssが適用されない 解決
 - canvasのclear関数でcanvasが初期化されない
 - フーリエ級数展開がうまく言ってるのかわからない

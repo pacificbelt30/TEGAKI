@@ -37,6 +37,7 @@ class ReportArea(QTextEdit):
         self.setViewportMargins(font_met.width('x')*3, 0, 0, 0)
         # self.tmp = QTextBlock()
         self.setFontUnderline(True)
+        self.setAcceptDrops(True)
 
     # DEBUG用
     def print_plaintext(self):
@@ -94,6 +95,35 @@ class ReportArea(QTextEdit):
         if self.get_line_count() > self.row:
             tmp = self.toPlainText()
             tmp = tmp[:]
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasUrls():
+            event.accept()
+        else:
+            event.ignore()
+
+    def dragMoveEvent(self, event):
+        if event.mimeData().hasUrls():
+            event.setDropAction(Qt.CopyAction)
+            event.accept()
+        else:
+            event.ignore()
+
+    def dropEvent(self, event):
+        fileName = event.mimeData().urls()
+        txt = ""
+        print(fileName[0].toLocalFile())
+        try:
+            with open(fileName[0].toLocalFile(), 'r', encoding="UTF-8") as f:
+                txt = f.read()
+        except:
+            print("FILEOPENERROR")
+        self.setPlainText(txt)
+        # self.file = fileName
+        print(str(fileName)+":"+str(type(fileName)))
+        return fileName
+        # self.text = fileName
+
 
 
 #class MainWindow(QWidget):
