@@ -126,6 +126,7 @@ class Canvas(QWidget):
 
     # x,y座標，画数，描画エリアすべてリセット
     def clear(self):
+        print(self.image.isNull())
         self.xlist = list()
         self.ylist = list()
         self.count = 0
@@ -165,7 +166,7 @@ class MainWindow(QMainWindow):
         self.title = "文字登録"
         self.width = 800
         self.height = 800
-        self.input = InputData("data/input.json")
+        self.input = InputData("data/input/num.json")
         #self.input = InputData("data/num.json")
         #self.text = ["あ", "い", "う", "え", "お"]
         #self.kakusu = [3, 2, 2, 2, 3]
@@ -174,14 +175,15 @@ class MainWindow(QMainWindow):
         self.count = 0
         self.font_scale = QFont()
         self.db = Database()
-        self.db.get_json("data/output.json")
+        self.db.get_json("data/output/output.json")
         self.initUI()
 
     def initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(0, 0, self.width, self.height)
-        self.show()
         self.setWindowLayout()
+        self.show()
+        self.canvas.clear()
 
     def setWindowLayout(self):
         self.order_label = QLabel()
@@ -202,7 +204,7 @@ class MainWindow(QMainWindow):
         self.canvas.moji_fin.connect(self.dis_paint)
         #self.canvas.oneline_fin.connect(self.update_label)
         self.canvas.oneline_fin.connect(self.label_update)
-        self.canvas.clear()
+        #self.canvas.clear()
         self.nextbtn.clicked.connect(self.next_moji)
         self.skipbtn.clicked.connect(self.skip_moji)
         self.cancelbtn.clicked.connect(self.cancel_moji)
@@ -237,48 +239,60 @@ class MainWindow(QMainWindow):
         kata = QAction( 'カタカナ', self)
         alpha = QAction( 'アルファベット', self)
         joyo = QAction( '常用漢字', self)
+        kigo = QAction( '記号', self)
         #openAct.setShortcut('Ctrl+O')
         num.setCheckable(True)
         hira.setCheckable(True)
         kata.setCheckable(True)
         alpha.setCheckable(True)
         joyo.setCheckable(True)
+        kigo.setCheckable(True)
         num.triggered.connect(lambda: self.change_input_data(0))
         hira.triggered.connect(lambda: self.change_input_data(1))
         kata.triggered.connect(lambda: self.change_input_data(2))
         alpha.triggered.connect(lambda: self.change_input_data(3))
         joyo.triggered.connect(lambda: self.change_input_data(4))
+        kigo.triggered.connect(lambda: self.change_input_data(5))
         self.filemenu.addAction(num)
         self.filemenu.addAction(hira)
         self.filemenu.addAction(kata)
         self.filemenu.addAction(alpha)
         self.filemenu.addAction(joyo)
+        self.filemenu.addAction(kigo)
         num.setActionGroup(self.exgroup)
         hira.setActionGroup(self.exgroup)
         kata.setActionGroup(self.exgroup)
         alpha.setActionGroup(self.exgroup)
         joyo.setActionGroup(self.exgroup)
+        kigo.setActionGroup(self.exgroup)
+        hira.setChecked(True)
+        self.change_input_data(1)
 
     def change_input_data(self,num:int):
         input_file_name = ""
         if num == 0:
-            input_file_name = "data/num.json"
+            input_file_name = "data/input/num.json"
         elif num == 1:
-            input_file_name = "data/input.json"
+            input_file_name = "data/input/hira.json"
         elif num == 2:
-            input_file_name = "data/input.json"
+            input_file_name = "data/input/kata.json"
         elif num == 3:
-            input_file_name = "data/input.json"
+            input_file_name = "data/input/num.json"
         elif num == 4:
-            input_file_name = "data/input.json"
+            input_file_name = "data/input/kanji.json"
+        elif num == 5:
+            input_file_name = "data/input/kigou.json"
         else:
-            input_file_name = "data/num.json"
+            input_file_name = "data/input/num.json"
 
         self.input = InputData(input_file_name)
         self.text = self.input.get_all_keydata('text')
         self.kakusu = self.input.get_all_keydata('kakusu')
-        self.count = 0
+        for i in range(len(self.kakusu)):
+            self.kakusu[i] = int(self.kakusu[i])
         self.canvas.clear()
+        self.canvas._kakusu = self.kakusu
+        self.count = 0
         self.label_update()
         
 
@@ -337,6 +351,7 @@ class MainWindow(QMainWindow):
     def next_moji(self) -> bool:
         if self.kakusu[self.count] != self.canvas.count:
             QMessageBox.information(None,'error','規定画数に達していません',QMessageBox.Ok)
+            print(str(self.kakusu[self.count])+","+str(self.canvas.count)+str(type(self.kakusu[self.count]))+str(type(self.canvas.count)))
             return False
         self.save_data()
         self.canvas.clear()

@@ -5,7 +5,7 @@ import json
 # [{"id":,"text":,"kakusu":},]
 class InputData:
     def __init__(self,filename):
-        print('initialize dataQuery')
+        print('initialize InputData')
         self._data:list = self.get_json(filename) # 入力json
         self._length:int = 0 # 一応長さ いらない
     
@@ -60,7 +60,7 @@ class InputData:
 class Database:
     def __init__(self):
         self._data = dict() # データ フォーマット変えたいかもしれない
-        self._file:str = "data/output.json" # データベースファイル名
+        self._file:str = "data/output/output.json" # データベースファイル名
     @property
     def data(self) -> dict:
         return self._data

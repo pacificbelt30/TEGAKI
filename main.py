@@ -33,10 +33,11 @@ class ReportArea(QTextEdit):
         self.setWordWrapMode(QTextOption.WrapAnywhere)
         # self.setLineWrapMode(3)  # 文字数での折返し 3
         self.setLineWrapColumnOrWidth(self.column)
-        self.setFixedHeight(font_met.height()*self.row)
+        # self.setFixedHeight(font_met.height()*self.row)
         self.setViewportMargins(font_met.width('x')*3, 0, 0, 0)
         # self.tmp = QTextBlock()
         self.setFontUnderline(True)
+        self.setAcceptDrops(True)
 
     # DEBUG用
     def print_plaintext(self):
@@ -95,6 +96,35 @@ class ReportArea(QTextEdit):
             tmp = self.toPlainText()
             tmp = tmp[:]
 
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasUrls():
+            event.accept()
+        else:
+            event.ignore()
+
+    def dragMoveEvent(self, event):
+        if event.mimeData().hasUrls():
+            event.setDropAction(Qt.CopyAction)
+            event.accept()
+        else:
+            event.ignore()
+
+    def dropEvent(self, event):
+        fileName = event.mimeData().urls()
+        txt = ""
+        print(fileName[0].toLocalFile())
+        try:
+            with open(fileName[0].toLocalFile(), 'r', encoding="UTF-8") as f:
+                txt = f.read()
+        except:
+            print("FILEOPENERROR" + str(fileName[0].toLocalfile()))
+        self.setPlainText(txt)
+        # self.file = fileName
+        print(str(fileName)+":"+str(type(fileName)))
+        return fileName
+        # self.text = fileName
+
+
 
 #class MainWindow(QWidget):
 class MainWindow(QMainWindow):
@@ -105,21 +135,24 @@ class MainWindow(QMainWindow):
         self.font_size = 15
         self.line_count = 0
         self.line_word_count = [0]
+        self.file = ""
 
         # self.test = QCheckBox('test', self)
         self.textbox = ReportArea()
         self.btn = QPushButton("SVGを出力(test.svg)", self)
         #self.btn.clicked.connect(self.textbox.print_plaintext)
         self.btn.clicked.connect(self.gen_svg)
+        self.label = QLabel("一行の文字数:"+str(self.textbox.column)+"\n"+"1ページの行数"+str(self.textbox.row))
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.btn)
+        layout.addWidget(self.label)
         layout.addWidget(self.textbox)
         self.widget = QWidget()
         self.widget.setLayout(layout)
         self.setCentralWidget(self.widget)
-        self.setGeometry(300, 50, 650, 550)
-        self.setFixedSize(650, 550) # サイズ変更不可能にした
+        self.setGeometry(300, 50, 650, 750)
+        # self.setFixedSize(650, 700) # サイズ変更不可能にした
         self.setWindowTitle('QCheckBox')
         self.initUI()
 
@@ -138,12 +171,17 @@ class MainWindow(QMainWindow):
         saveAsAct = QAction(self.style().standardIcon(QStyle.SP_DialogOpenButton), 'Save as', self)
         saveAsAct.setShortcut('Ctrl+Shift+S')
         saveAsAct.triggered.connect(self.getSaveAsFileName)
+        exportAct = QAction(self.style().standardIcon(QStyle.SP_DialogOpenButton), 'export', self)
+        exportAct.setShortcut('Ctrl+E')
+        exportAct.triggered.connect(self.getExportFileName)
         self.filemenu.addAction(openAct)
         self.filemenu.addAction(saveAct)
         self.filemenu.addAction(saveAsAct)
+        self.filemenu.addAction(exportAct)
 
     def getOpenFileName(self):
         (fileName, selectedFilter) = QFileDialog.getOpenFileName(self,filter="PlainText Files (*.txt)")
+        txt = ""
         if fileName == "":
             print("cannot open: file name is empty")
         print("open:"+fileName)
@@ -153,16 +191,39 @@ class MainWindow(QMainWindow):
         except:
             print("FILEOPENERROR")
         self.textbox.setPlainText(txt)
+        self.file = fileName
         return fileName
 
     def getSaveFileName(self):
+        if self.file != "":
+            with open(self.file, 'w') as f:
+                f.write(self.textbox.toPlainText())
+            return self.file
         (fileName, selectedFilter) = QFileDialog.getSaveFileName(self,filter="PlainText Files (*.txt)")
         print("save:"+fileName)
+        with open(fileName, 'w') as f:
+            f.write(self.textbox.toPlainText())
+        self.file = fileName
         return fileName
 
     def getSaveAsFileName(self):
         (fileName, selectedFilter) = QFileDialog.getSaveFileName(self,filter="PlainText Files (*.txt)")
         print("save as:"+fileName)
+        with open(fileName, 'w') as f:
+            f.write(self.textbox.toPlainText())
+        self.file = fileName
+        return fileName
+
+    def getExportFileName(self):
+        (fileName, selectedFilter) = QFileDialog.getSaveFileName(self,filter="PlainText Files (*.*)")
+        print("save as:"+fileName)
+        s = self.textbox.toPlainText()
+        a4 = A4_svgenerator()
+        a4._title = fileName
+        a4.text = s
+        if not a4.gen():
+            QMessageBox.information(None, 'error', '何も入力されていない', QMessageBox.Ok)
+            return -1
         return fileName
 
     def print_plaintext(self):
@@ -175,14 +236,15 @@ class MainWindow(QMainWindow):
     def gen_svg(self):
         s = self.textbox.toPlainText()
         a4 = A4_svgenerator()
-        a4._text = s
-        a4.gen()
-        #sv = SVMainWindow()
-        #sv.svg = QGraphicsSvgItem("test.svg")
-        #sv.scene.clear()
-        #sv.scene.addItem(sv.svg)
-        #sv.view.update()
-        #sv.show()
+        a4.text = s
+        if not a4.gen():
+            QMessageBox.information(None, 'error', '何も入力されていない', QMessageBox.Ok)
+            return -1
+        self.sv = SVMainWindow()
+        for i in range(a4.page):
+            self.sv.OpenSvgFile(a4.title+"_"+str(i+1)+".svg")
+        self.sv.show()
+        # self.hide()
 
     def get_line_count(self):
         # count = 0

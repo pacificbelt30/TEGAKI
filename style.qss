@@ -1,5 +1,5 @@
 QTextEdit{
-    background-color:#444444
+    background-color:#444444;
     padding:0 1em;
     background: linear-gradient(#ccc 1px, transparent 1px) #fffbf2;
     background-size: auto 2.5em;

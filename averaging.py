@@ -9,10 +9,10 @@ class Averaging:
     def __init__(self):
         self._moji_file = Database()
         self._moji = dict()
-        self._moji_filename = "../data/moji.json"
+        self._moji_filename = "../data/output/moji.json"
         self._moji_file.get_json(self._moji_filename)
         self._data = Database()
-        self._data.get_json("../data/output.json")
+        self._data.get_json("../data/output/output.json")
         self._key_list = self.data.data.keys() # 全鍵のリスト
         self.var_init()
 
