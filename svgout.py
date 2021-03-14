@@ -11,9 +11,12 @@ import os
 import math
 
 
-# A4(297x210) A罫 34行7mm，B罫 36行6mm
+# A罫，B罫で寸法に規格があるわけではなかった
+# KOKUYO レ-116A, レ116B
+# A4(297x210) A罫 34行7mm，B罫 40行6mm
 # ヘッダー 42.5mm + 1mm, フッター 15mm + 0.5mm
-# 左 7mm, 右 7mm , 補助線7mmx28
+#A罫 左 7mm, 右 7mm, 補助線7mmx28
+#B罫 左 6mm, 右 6mm, 補助線6mmx35
 class A4_svgenerator:
     def __init__(self):
         self._svg: QSvgGenerator = QSvgGenerator()
