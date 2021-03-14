@@ -19,8 +19,8 @@ from svgViewer import SVGView,SVMainWindow
 class ReportArea(QTextEdit):
     def __init__(self, parent=None):
         super(ReportArea, self).__init__(parent)
-        self.row = 20
-        self.column = 30
+        self.row = 34
+        self.column = 28
         self.font_size = 15
         self.line_count = 0
         self.line_word_count = 0
