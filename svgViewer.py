@@ -63,10 +63,10 @@ class SVGView(QGraphicsView):
 
     def mouseMoveEvent(self, event):
         if event.buttons() == Qt.LeftButton and self.is_press:
-            # self.pos.setX(self.pos.x() - (event.pos().x()-self.lastpos.x())/self.ratio)
-            # self.pos.setY(self.pos.y() - (event.pos().y()-self.lastpos.y())/self.ratio)
-            self.pos.setX(self.pos.x() - (event.pos().x()-self.lastpos.x()))
-            self.pos.setY(self.pos.y() - (event.pos().y()-self.lastpos.y()))
+            self.pos.setX(self.pos.x() - (event.pos().x()-self.lastpos.x())/self.ratio)
+            self.pos.setY(self.pos.y() - (event.pos().y()-self.lastpos.y())/self.ratio)
+            #self.pos.setX(self.pos.x() - (event.pos().x()-self.lastpos.x()))
+            #self.pos.setY(self.pos.y() - (event.pos().y()-self.lastpos.y()))
             if self.pos.x() < 0:self.pos.setX(0)
             if self.pos.y() < 0:self.pos.setY(0)
             if self.pos.x() > self.sceneRect().width():self.pos.setX(self.sceneRect().width())
