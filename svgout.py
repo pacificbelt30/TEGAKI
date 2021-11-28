@@ -23,7 +23,7 @@ class A4_svgenerator:
         self._svg: QSvgGenerator = QSvgGenerator()
         #self._title: str = "test.svg"
         self._title: str = "test"
-        self._hol:int = 210*100 # 横ピクセル
+        self._hol:int = 210*10 # 横ピクセル
         self._ver:int = round(self.hol*math.sqrt(2)) # 縦ピクセル
         self._row: int = 34  # 行
         self._column: int = 28  # 列
@@ -197,7 +197,7 @@ class A4_svgenerator:
         #self.svg.setViewBox(QRect(0,0,self.column*self.pixel+(self.left_margin+self.right_margin),self.row*(self.line_margin+self.pixel)+(self.head_margin+self.bottom_margin)))
         self.svg.setSize(QSize(self.hol,self.ver))
         print(self.hol,self.ver)
-        self.svg.setViewBox(QRect(0,0,self.hol,self.ver))
+        self.svg.setViewBox(QRect(0,0,self.hol*10,self.ver*10))
         # self.svg.setSize(QSize(500,500))
         # self.svg.setViewBox(QRect(0, 0,500,500))
         self.svg.setTitle(file)
