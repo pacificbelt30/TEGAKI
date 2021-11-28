@@ -27,7 +27,7 @@ class A4_svgenerator:
         self._ver:int = round(self.hol*math.sqrt(2)) # 縦ピクセル
         self._row: int = 34  # 行
         self._column: int = 28  # 列
-        self._pixel: int = int(self.hol/30)  # 一文字分のピクセル
+        self._pixel: int = int(self.hol*10/30)  # 一文字分のピクセル
         self._head_margin: int = round(43.5/297*self.ver)
         self._bottom_margin: int = self.ver-self.head_margin+self.row*self.pixel
         self._right_margin: int = int(self.hol/30)
