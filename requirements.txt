@@ -1,3 +1,4 @@
 PySide2~=5.15.2
 matplotlib~=3.3.3
 scipy~=1.6.1
+svglib
