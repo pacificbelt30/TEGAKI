@@ -163,7 +163,7 @@ class A4_svgenerator:
                         break
                     try:
                         self.draw_moji(self.mojidata[self.text[count]],painter,i,j)
-                        print(self.mojidata[self.text[count]])
+                        #print(self.mojidata[self.text[count]])
                     except KeyError:
                         import traceback
                         traceback.print_exc()
@@ -196,6 +196,7 @@ class A4_svgenerator:
         #self.svg.setSize(QSize(self.column*self.pixel+(self.left_margin+self.right_margin),self.row*(self.line_margin+self.pixel)+(self.head_margin+self.bottom_margin)))
         #self.svg.setViewBox(QRect(0,0,self.column*self.pixel+(self.left_margin+self.right_margin),self.row*(self.line_margin+self.pixel)+(self.head_margin+self.bottom_margin)))
         self.svg.setSize(QSize(self.hol,self.ver))
+        print(self.hol,self.ver)
         self.svg.setViewBox(QRect(0,0,self.hol,self.ver))
         # self.svg.setSize(QSize(500,500))
         # self.svg.setViewBox(QRect(0, 0,500,500))
@@ -205,3 +206,8 @@ class A4_svgenerator:
     def trans_han_to_zen(self,text:str):
         return text.translate(str.maketrans({chr(0xFF01 + i): chr(0x21 + i) for i in range(94)}))
 
+if __name__ == "__main__":
+    a4 = A4_svgenerator()
+    a4._title = "test.svg"
+    a4.text = "ああああああああああ"
+    print(a4.gen())
