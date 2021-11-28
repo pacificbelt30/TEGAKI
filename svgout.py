@@ -46,7 +46,7 @@ class A4_svgenerator:
         #self.svg.setSize(QSize(self.column*self.pixel+(self.left_margin+self.right_margin),self.row*(self.line_margin+self.pixel)+(self.head_margin+self.bottom_margin)))
         #self.svg.setViewBox(QRect(0,0,self.column*self.pixel+(self.left_margin+self.right_margin),self.row*(self.line_margin+self.pixel)+(self.head_margin+self.bottom_margin)))
         self.svg.setSize(QSize(self.hol,self.ver))
-        self.svg.setViewBox(QRect(0,0,self.hol,self.ver))
+        self.svg.setViewBox(QRect(0,0,self.hol*10,self.ver*10))
         # self.svg.setSize(QSize(500,500))
         # self.svg.setViewBox(QRect(0, 0,500,500))
         self.svg.setTitle(self.title)
@@ -148,7 +148,7 @@ class A4_svgenerator:
             #rect = QRect(0, 0, self.column * self.pixel + (self.left_margin + self.right_margin),
                                       #self.row * (self.line_margin + self.pixel) + (
                                                   #self.head_margin + self.bottom_margin))
-            rect = QRect(0, 0,self.hol,self.ver)
+            rect = QRect(0, 0,self.hol*10,self.ver*10)
             painter.fillRect(rect, Qt.white)
             i: int = 0
             while True:
